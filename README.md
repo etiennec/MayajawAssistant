@@ -1,4 +1,4 @@
 MayajawAssistant
 ================
 
-Petits utilitaires pour Mayajaw
+Petits utilitaires pour Mayajaw.

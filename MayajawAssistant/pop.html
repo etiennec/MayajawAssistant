@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="css/mj.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="js/libs/kendo/styles/kendo.common.min.css" type="text/css">
+    <link rel="stylesheet" href="js/libs/kendo/styles/kendo.default.min.css" type="text/css">
+
+    <title>Mayajaw Kikafékoa</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+
+</head>
+<body>
+<div id="container" ng-app="">
+    <div id="header">
+        <h1>
+            <a href="index.html" class="page-title">Mayajaw Kikafékoa</a>
+        </h1>
+    </div>
+
+    <div id="main" data-ng-controller="SomeCtrl">
+        <div class="back-link">
+            <a href="index.html" class="k-button" id="back-to-entry-input-from-cenote">&lt;&lt; Retour</a>
+        </div>
+        <div class="records" data-ng-repeat="record in records | orderBy:orderProp">
+            <h5> {{record.title}} </h5>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="js/libs/angular-1.0.4.min.js"></script>
+<script src="src/app/population-analyzer-app.js"></script>
+</body>
+</html>

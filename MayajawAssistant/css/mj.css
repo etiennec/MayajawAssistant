@@ -1,0 +1,139 @@
+#header {
+    background: #000;
+    margin: 0px;
+    padding: 5px;
+}
+
+#header h1 {
+    font-family: Arial;
+    color: #d3d3d3;
+    margin: 0px;
+    font-size: 1.3em;
+}
+
+#header h3 {
+    font-family: Arial;
+    padding: 0px;
+    margin: 2px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+#header h1 a {
+    color: #d3d3d3;
+    text-decoration: none;
+}
+
+.back-link {
+    padding-top: 10px;
+    padding-left: 20px;
+    float: left;
+}
+
+.wide-chart {
+    clear: both;
+    width: 95%;
+    float: left;
+    height: 350px;
+}
+
+.pie-chart {
+    width: 550px;
+    height: 300px;
+}
+
+div .offer-names-list {
+    float: left;
+    padding-left: 20px;
+}
+
+.list-members, .offer-names-list-header {
+    padding: 5px 15px;
+}
+
+.offer-names-list-header {
+    font-weight: bold;
+}
+
+div .chart {
+    float: left;
+}
+
+a.input-button {
+    clear: both;
+    width: 500px;
+    float: left;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 30px;
+    margin-top: 20px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.analysis-main-content, .analysis-sub-content {
+    clear: both;
+}
+
+.analysis-sub-content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    float: left;
+}
+
+textarea.input-text {
+    width: 100%;
+    float: left;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    background-color: LightCyan;
+}
+
+.entry-input-zone {
+    float: left;
+    width: 40%;
+    margin: 20px;
+    padding: 30px;
+}
+
+.bordered {
+    border: 2px solid;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px #888888;
+    margin: 15px;
+}
+
+div.entry-input-zone {
+    border-radius: 25px;
+}
+
+.input-title {
+    text-align: center;
+    font-size: xx-large;
+    margin-bottom: 25px;
+}
+
+.sub-content-title {
+    text-align: center;
+    font-size: larger;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.market-items-list-holder, .main-market-charts {
+    float: left;
+    width: auto;
+}
+
+.market-items-list, .nobles-names-list{
+    clear: both;
+    padding: 20px 5px;
+}
+
+
