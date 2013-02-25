@@ -14,7 +14,9 @@ EntryInputView = Backbone.View.extend({
         "click #process-cenote-input": "parseCenoteInput",
         "click #process-market-input": "parseMarketInput",
         "click #cenote-input-text": "clearInputTextArea",
-        "click #market-input-text": "clearInputTextArea"
+        "click #market-input-text": "clearInputTextArea",
+        "click #load-cenote-data": "loadCenoteData",
+        "click #load-market-data": "loadMarketData"
 
     },
     parseCenoteInput: function (event) {
@@ -31,6 +33,18 @@ EntryInputView = Backbone.View.extend({
             event.target.value = ""
         }
 
+    },
+    loadCenoteData: function () {
+        this.loadTextData("#cenote-input-text", "data/cenote.txt");
+    },
+    loadMarketData: function () {
+        this.loadTextData("#market-input-text", "data/market.txt");
+    },
+    loadTextData: function (textAreaId, dataFilePath) {
+        $.get(dataFilePath, null, function (data) {
+            $(textAreaId).val(data);
+        }, "text");
     }
+
 
 });

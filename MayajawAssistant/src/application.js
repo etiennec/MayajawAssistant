@@ -4,6 +4,6 @@
     Backbone.history.start();
 
     //$("#cenote-input-text").val($("#cenote-sample-tmpl").html())
-    $("#market-input-text").val($("#market-sample-tmpl").html())
+    //$("#market-input-text").val($("#market-sample-tmpl").html())
 
 })(jQuery);
