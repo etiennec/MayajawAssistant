@@ -1,9 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="mjassistant">
 <head>
-    <title></title>
+    <title>Mayajaw Kikafékoa</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <link rel="stylesheet" href="css/mj.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" charset="utf-8"/>
 </head>
 <body>
+
+<div id="container">
+    <div id="header" ng-controller="UtilsCtrl">
+        <h1>
+            <a href="index-old.html" class="page-title">Mayajaw Kikafékoa</a>
+        </h1>
+
+        <h3 id="subtitle">Créé par Xatocoatl {{ quotes.randomQuote }}</h3>
+    </div>
+
+    <div id="main">
+        <div ng-view>Veuillez patienter pendant que les esclaves examinent le contenu du cénote...</div>
+    </div>
+</div>
+
+<!-- Libs on CDN -->
+<script src="js/libs/angular-1.0.4.min.js"></script>
+<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+<!-- needed by HighCharts -->
+<!--<script src="http://cdnjs.cloudflare.com/ajax/libs/highcharts/2.3.5/highcharts.js"></script>-->
+<script src="js/libs/jquery-1.8.2.js"></script>
+<script src="js/libs/highcharts.src.js"></script>
+
+<!-- App Data -->
+<!-- Utils -->
+<script src="src/utils/utils.js" charset="utf-8"></script>
+<script src="src/utils/parseUtils.js" charset="utf-8"></script>
+<script src="src/utils/chartsUtils.js" charset="utf-8"></script>
+
+<!-- App entry point -->
+<script src="src/app/app.js"></script>
+
+<!-- Services -->
+<script src="src/services/SharedDataService.js" charset="utf-8"></script>
+
+<!-- Models -->
+<script src="src/models/Offering.js" charset="utf-8"></script>
+<script src="src/models/MonthlyOfferings.js" charset="utf-8"></script>
+<script src="src/models/OfferingsList.js" charset="utf-8"></script>
+
+<!-- Controllers -->
+<script src="src/controllers/EntryInputCtrl.js" charset="utf-8"></script>
+<script src="src/controllers/CenoteCtrl.js" charset="utf-8"></script>
+<script src="src/controllers/UtilsCtrl.js" charset="utf-8"></script>
+
 
 </body>
 </html>

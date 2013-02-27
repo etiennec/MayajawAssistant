@@ -93,5 +93,4 @@ CenoteAnalysisView = Backbone.View.extend({
         }
         this.renderOffereeChart(offeree)
     }
-
 });

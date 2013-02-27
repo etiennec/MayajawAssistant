@@ -1,10 +1,9 @@
-var Offering = Backbone.Model.extend({
-    default: {
-        from: "NA",
-        to: "NA",
-        of: 0
-    },
-    toString: function() {
-        return this.get("from")+ " offered "+this.get("of")+ " to "+this.get("to")
+function Offering(from, to, of) {
+    this.from = typeof from !== 'undefined' ? from : "NA";
+    this.to = typeof to !== 'undefined' ? to : "NA";
+    this.of = typeof of !== 'undefined' ? of : 0;
+
+    this.toString = function () {
+        return this.from + " offered " + this.of + " to " + this.to;
     }
-});
+};

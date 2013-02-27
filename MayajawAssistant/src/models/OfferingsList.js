@@ -1,6 +1,7 @@
-var OfferingsList = {
-    monthlyOfferings: [], // Array of monthly offerings
-    toString: function () {
+function OfferingsList() {
+    this.monthlyOfferings = []; // Array of monthly offerings
+
+    this.toString = function () {
         var string = "Total count:" + this.monthlyOfferings.length;
         for (var i = 0; i < this.monthlyOfferings.length; i++) {
             var monthlyOffering = this.monthlyOfferings[i];
@@ -8,16 +9,16 @@ var OfferingsList = {
         }
 
         return string;
-    },
+    };
 
-    toObject: function () {
+    this.toObject = function () {
         return {
             Offerers: this.getOfferersList(null),
             Offerees: this.getOffereesList(null)
         }
-    },
+    };
 
-    getOfferersList: function (offereeFilterName) {
+    this.getOfferersList = function (offereeFilterName) {
 
         var offerersSet = [];
         var offerersTotal = {};
@@ -25,13 +26,13 @@ var OfferingsList = {
 
         for (var i = 0; i < offerings.length; i++) {
             var offering = offerings[i];
-            var to = offering.get("to");
+            var to = offering.to;
             if (offereeFilterName != null && to != offereeFilterName) {
                 continue;
             }
 
-            var from = offering.get("from");
-            var of = offering.get("of");
+            var from = offering.from;
+            var of = offering.of;
             if (offerersSet.indexOf(from) == -1) {
                 // New offerer
                 offerersSet.push(from);
@@ -54,9 +55,9 @@ var OfferingsList = {
         })
 
         return offerersList;
-    },
+    };
 
-    getOffereesList: function (offererFilterName) {
+    this.getOffereesList = function (offererFilterName) {
 
         var offereesSet = [];
         var offereesTotal = {};
@@ -64,13 +65,13 @@ var OfferingsList = {
 
         for (var i = 0; i < offerings.length; i++) {
             var offering = offerings[i];
-            var from = offering.get("from");
+            var from = offering.from;
             if (offererFilterName != null && from != offererFilterName) {
                 continue;
             }
 
-            var to = offering.get("to");
-            var of = offering.get("of");
+            var to = offering.to;
+            var of = offering.of;
             if (offereesSet.indexOf(to) == -1) {
                 // New offerer
                 offereesSet.push(to);
@@ -93,31 +94,31 @@ var OfferingsList = {
         })
 
         return offereesList;
-    },
+    };
 
     // Return the list of all offerings. Can pass optional year and/or month to filter data returned.
-    getOfferingsList: function (year, month) {
+    this.getOfferingsList = function (year, month) {
         var offerings = [];
 
         for (var i = 0; i < this.monthlyOfferings.length; i++) {
             var monthlyOffering = this.monthlyOfferings[i];
-            if (year != null && monthlyOffering.get("year") != year) {
+            if (year != null && monthlyOffering.year != year) {
                 continue;
             }
-            if (month != null && monthlyOffering.get("month") != month) {
+            if (month != null && monthlyOffering.month != month) {
                 continue;
             }
 
-            for (var j = 0; j < monthlyOffering.get("offerings").length; j++) {
-                offerings.push((monthlyOffering.get("offerings")[j]));
+            for (var j = 0; j < monthlyOffering.offerings.length; j++) {
+                offerings.push((monthlyOffering.offerings[j]));
             }
         }
 
         return offerings;
-    },
+    };
 
     // Return the contents ready for use in a stacked Area chart or a stacked columns chart.
-    getAsStackedData: function () {
+    this.getAsStackedData = function () {
         var categories = [];
         // This var will contain arrays of series with offerer as index.
         var tmpSeries = {};
@@ -125,16 +126,16 @@ var OfferingsList = {
         for (var i = 0; i < this.monthlyOfferings.length; i++) {
             var monthlyOffering = this.monthlyOfferings[i];
             categories.push(monthlyOffering.getDateAsString());
-            for (var j = 0; j < monthlyOffering.get("offerings").length; j++) {
-                var offering = monthlyOffering.get("offerings")[j];
-                var offerer = offering.get("from");
+            for (var j = 0; j < monthlyOffering.offerings.length; j++) {
+                var offering = monthlyOffering.offerings[j];
+                var offerer = offering.from;
                 if (tmpSeries[offerer] === undefined) {
                     tmpSeries[offerer] = [];
                 }
                 if (tmpSeries[offerer][i] === undefined) {
                     tmpSeries[offerer][i] = 0;
                 }
-                tmpSeries[offerer][i] += offering.get("of");
+                tmpSeries[offerer][i] += offering.of;
             }
         }
 
@@ -158,5 +159,5 @@ var OfferingsList = {
             series: series
         }
 
-    }
+    };
 };

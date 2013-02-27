@@ -15,9 +15,7 @@
     <script id="entry-input-tmpl" type="text/x-handlebars-template">
         <div class="entry-input-zone bordered">
             <div class="input-title">Cénote</div>
-            <textarea rows="20" cols="80" id="cenote-input-text" class="k-textbox input-text">-== Copiez-collez ici le contenu du registre du Cénote ==-
-
-(ou cliquez sur le bouton "Charger les données de test")</textarea>
+            <textarea rows="20" cols="80" id="cenote-input-text" class="k-textbox input-text"></textarea>
             <div>
                 <a href="#/cenote" class="k-button input-button" id="process-cenote-input">Kikafékoa au cénote ? &gt;&gt;</a>
                 <a class="k-button input-button" id="load-cenote-data">Charger les données de test</a>
@@ -194,12 +192,12 @@
 <script src="src/utils/chartsUtils.js"></script>
 
 <!-- Models -->
-<script src="src/backbone/models/Offering.js"></script>
-<script src="src/backbone/models/MonthlyOfferings.js"></script>
+<script src="src/models/Offering.js"></script>
+<script src="src/models/MonthlyOfferings.js"></script>
 <script src="src/backbone/models/MarketOp.js"></script>
 <script src="src/backbone/models/MonthlyMarketOps.js"></script>
 <!-- Collections -->
-<script src="src/backbone/collections/OfferingsList.js"></script>
+<script src="src/models/OfferingsList.js"></script>
 <script src="src/backbone/collections/MarketOpsList.js"></script>
 <!-- Views -->
 <script src="src/backbone/views/EntryInputView.js"></script>

@@ -1,14 +1,14 @@
 ParseUtils = {};
 
-ParseUtils.yearMonthLineMatcher = /Ann.e (\d+) - Mois (\d+)/
+ParseUtils.yearMonthLineMatcher = /Ann.e (\d+) - Mois (\d+)/;
 
 // Cenote
-ParseUtils.offeringLineMatcher = /(.+) a donn. (\d+)\s?. ([^\(\n]+)/
-ParseUtils.prayerLineMatcher = /Les pri.res de (.+) ont honor. (.+) : \+(\d+)/
+ParseUtils.offeringLineMatcher = /(.+) a donn. (\d+)\s?. ([^\(\n]+)/;
+ParseUtils.prayerLineMatcher = /Les pri.res de (.+) ont honor. (.+) : \+(\d+)/;
 
 // Market
-ParseUtils.sellLineMatcher = /(.+) a vendu (\d+) (.+)/
-ParseUtils.buyLineMatcher = /(.+) a achet. (\d+) (.+)/
+ParseUtils.sellLineMatcher = /(.+) a vendu (\d+) (.+)/;
+ParseUtils.buyLineMatcher = /(.+) a achet. (\d+) (.+)/;
 
 
 // Parse a line into a header line, i.e. year/month line.
@@ -18,9 +18,9 @@ ParseUtils.parseHeaderOfferingLine = function (line) {
     var headerMatch = ParseUtils.yearMonthLineMatcher.exec(line)
 
     if (headerMatch === null) {
-        return null
+        return null;
     } else {
-        return  new MonthlyOfferings({year: parseInt(headerMatch[1]), month: parseInt(headerMatch[2])})
+        return  new MonthlyOfferings(parseInt(headerMatch[2]), parseInt(headerMatch[1]));
     }
 
 }
@@ -29,12 +29,12 @@ ParseUtils.parseHeaderOfferingLine = function (line) {
 // Returns a new MonthlyMarketOps if parsed successfully, null else.
 ParseUtils.parseHeaderMarketOpsLine = function (line) {
 
-    var headerMatch = ParseUtils.yearMonthLineMatcher.exec(line)
+    var headerMatch = ParseUtils.yearMonthLineMatcher.exec(line);
 
     if (headerMatch === null) {
-        return null
+        return null;
     } else {
-        return  new MonthlyMarketOps({year: parseInt(headerMatch[1]), month: parseInt(headerMatch[2])})
+        return  new MonthlyMarketOps({year: parseInt(headerMatch[1]), month: parseInt(headerMatch[2])});
     }
 
 }
@@ -42,20 +42,20 @@ ParseUtils.parseHeaderMarketOpsLine = function (line) {
 // Parse an offering line into an Offering object or null if not matching.
 ParseUtils.parseOfferingLine = function (line) {
 
-    var offeringMatch = ParseUtils.offeringLineMatcher.exec(line)
+    var offeringMatch = ParseUtils.offeringLineMatcher.exec(line);
 
-    var offering = null
+    var offering = null;
 
     if (offeringMatch === null) {
-        var prayerMatch = ParseUtils.prayerLineMatcher.exec(line)
+        var prayerMatch = ParseUtils.prayerLineMatcher.exec(line);
         if (prayerMatch !== null) {
-            var offering = new Offering({from: $.trim(prayerMatch[1]), of: parseInt(prayerMatch[3]), to: (prayerMatch[2]).trim()})
+            var offering = new Offering((prayerMatch[1]).trim(), (prayerMatch[2]).trim(), parseInt(prayerMatch[3]));
         }
     } else {
-        var offering = new Offering({from: $.trim(offeringMatch[1]), of: parseInt(offeringMatch[2]), to: (offeringMatch[3]).trim()})
+        var offering = new Offering((offeringMatch[1]).trim(), (offeringMatch[3]).trim(), parseInt(offeringMatch[2]));
     }
 
-    return offering
+    return offering;
 
 }
 
@@ -83,7 +83,7 @@ ParseUtils.parseMarketOpLine = function (line) {
 
 ParseUtils.parseCenoteInput = function (rawText) {
 
-    var offeringsList = new OfferingsList
+    var offeringsList = new OfferingsList;
 
     var currentMonthOfferings = null
 
@@ -105,18 +105,18 @@ ParseUtils.parseCenoteInput = function (rawText) {
                     } else {
                         currentMonthOfferings = new MonthlyOfferings
                         currentMonthOfferings.addOffering(offering)
-                        offeringsList.add(currentMonthOfferings)
+                        offeringsList.monthlyOfferings.push(currentMonthOfferings)
                     }
                 }
             } else {
                 // Header line : New Offerings in OfferingsList
                 currentMonthOfferings = tempMonthOffering
-                offeringsList.add(currentMonthOfferings)
+                offeringsList.monthlyOfferings.push(currentMonthOfferings)
             }
         }
     }
 
-    ParseUtils.sortMonthlyCollection(offeringsList)
+    ParseUtils.sortMonthlyCollection(offeringsList.monthlyOfferings)
 
     return offeringsList;
 }
@@ -157,17 +157,17 @@ ParseUtils.parseMarketInput = function (rawText) {
         }
     }
 
-    ParseUtils.sortMonthlyCollection(marketOpsList)
+    ParseUtils.sortMonthlyCollection(marketOpsList.monthlyOps)
 
     return marketOpsList;
 }
 
 ParseUtils.sortMonthlyCollection = function (monthlyCollection) {
-    monthlyCollection.models.sort(function (a, b) {
-        if (a.get("year") !== b.get("year")) {
-            return a.get("year") - b.get("year");
+    monthlyCollection.sort(function (a, b) {
+        if (a.year !== b.year) {
+            return a.year - b.year;
         }
 
-        return  a.get("month") - b.get("month");
+        return  a.month - b.month;
     })
 }

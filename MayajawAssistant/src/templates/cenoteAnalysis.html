@@ -1,9 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="back-link">
+    <a href="#" class="button" id="back-to-entry-input-from-cenote">&lt;&lt; Retour</a>
+</div>
+<div class="analysis-main-content">
+    <div id="main-overview-stacked-columns-chart" class="chart wide-chart bordered"></div>
+    <div id="main-overview-stacked-area-chart" class="chart wide-chart bordered"></div>
+    <div id="main-offerers" class="analysis-sub-content bordered">
+        <div id="offerers-chart-title" class="sub-content-title">Répartition par Noble</div>
+        <div id="offerers-list" class="offer-names-list">
+            <div id="offerers-list-header" class="offer-names-list-header  clickable" ng-click=" selectNoble(''); renderOffererChart()" ng-class="{active: selectedNoble == ''}">
+                &gt; Tous les Nobles &lt;</div>
+            <dl id="offerers-list-members" class="list-members unstyled">
+                <dt ng-repeat="noble in nobles">
+                    <span class="clickable" ng-click="selectNoble(noble.Name); renderOffererChart(noble.Name)" ng-class="{active: noble.Name == selectedNoble}">{{noble.Name}} : {{noble.Value}}</span>
+                </dt>
+            </dl>
+        </div>
+        <div id="offerers-pie-chart" class="chart pie-chart"></div>
+    </div>
+    <div id="main-offerees" class="analysis-sub-content bordered">
+        <div id="offerees-chart-title" class="sub-content-title">Répartition par Dieu</div>
+        <div id="offerees-list" class="offer-names-list">
+            <div id="offerees-list-header" class="offer-names-list-header  clickable" ng-click="selectGod(''); renderOffereeChart()" ng-class="{active: selectedGod == ''}">
+                &gt; Tous les Dieux &lt;</div>
+            <dl id="offerees-list-members" class="list-members unstyled">
+                <dt ng-repeat="god in gods">
+                    <span class="clickable" ng-click="selectGod(god.Name); renderOffereeChart(god.Name)" ng-class="{active: god.Name == selectedGod}">{{god.Name}} : {{god.Value}}</span>
+                </dt>
+            </dl>
+        </div>
+        <div id="offerees-pie-chart" class="chart pie-chart"></div>
+    </div>
+</div>

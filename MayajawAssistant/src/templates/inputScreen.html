@@ -1,9 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="entry-input-zone bordered">
+    <div class="input-title">Cénote</div>
+    <textarea rows="20" cols="80" id="cenote-input-text" class="textbox input-text" ng-model="inputs.cenote" ng-click="cleanInput('cenote')"></textarea>
+    <div>
+        <a href="#/cenote" class="button input-button" id="process-cenote-input" ng-click="processCenoteInput()">Kikafékoa au cénote ? &gt;&gt;</a>
+        <a class="button input-button" id="load-cenote-data" ng-click="loadSampleData('cenote')">Charger les données de test</a>
+    </div>
+</div>
+<div class="entry-input-zone bordered">
+    <div class="input-title">Marché</div>
+    <textarea rows="20" cols="80" id="market-input-text" class="textbox input-text" ng-model="inputs.market" ng-click="cleanInput('market')"></textarea>
+    <div>
+        <a href="#/market" class="button input-button" id="process-market-input" ng-click="processMarketInput()">Kikafékoa au marché ? &gt;&gt;</a>
+        <a class="button input-button" id="load-market-data" ng-click="loadSampleData('market')">Charger les données de test</a>
+    </div>
+</div>

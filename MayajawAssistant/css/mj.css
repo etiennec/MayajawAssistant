@@ -136,4 +136,8 @@ div.entry-input-zone {
     padding: 20px 5px;
 }
 
+.active {
+    background-color: LightCyan;
+}
+
 
