@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mayajaw Kikafékoa</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <link rel="stylesheet" href="css/mj.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="js/libs/kendo/styles/kendo.common.min.css" type="text/css">
+    <link rel="stylesheet" href="js/libs/kendo/styles/kendo.default.min.css" type="text/css">
+
+    <!-- Templates. To be externalized -->
+
+    <script id="entry-input-tmpl" type="text/x-handlebars-template">
+        <div class="entry-input-zone bordered">
+            <div class="input-title">Cénote</div>
+            <textarea rows="20" cols="80" id="cenote-input-text" class="k-textbox input-text">-== Copiez-collez ici le contenu du registre du Cénote ==-
+
+(ou cliquez sur le bouton "Charger les données de test")</textarea>
+            <div>
+                <a href="#/cenote" class="k-button input-button" id="process-cenote-input">Kikafékoa au cénote ? &gt;&gt;</a>
+                <a class="k-button input-button" id="load-cenote-data">Charger les données de test</a>
+            </div>
+        </div>
+        <div class="entry-input-zone bordered">
+            <div class="input-title">Marché</div>
+            <textarea rows="20" cols="80" id="market-input-text" class="k-textbox input-text">-== Copiez-collez ici le contenu du registre du Marché ==-
+
+(ou cliquez sur le bouton "Charger les données de test")</textarea>
+            <div>
+                <a href="#/market" class="k-button input-button" id="process-market-input">Kikafékoa au marché ? &gt;&gt;</a>
+                <a class="k-button input-button" id="load-market-data">Charger les données de test</a>
+            </div>
+        </div>
+        <!-- <div class="entry-input-zone bordered">
+            <div class="input-title">Simulateur de Moral des esclaves</div>
+            <a href="pop.html" class="k-button input-button" id="goto-popuplation">Accéder au simulateur de moral de population &gt;&gt;</a>
+        </div> -->
+    </script>
+
+
+    <script id="cenote-analysis-tmpl" type="text/x-handlebars-template">
+        <div class="back-link">
+            <a href="#" class="k-button" id="back-to-entry-input-from-cenote">&lt;&lt; Retour</a>
+        </div>
+        <div class="analysis-main-content">
+            <div id="main-overview-stacked-columns-chart" class="chart wide-chart bordered"></div>
+            <div id="main-overview-stacked-area-chart" class="chart wide-chart bordered"></div>
+            <div id="main-offerers" class="analysis-sub-content bordered">
+                <div id="offerers-chart-title" class="sub-content-title">Répartition par Noble</div>
+                <div id="offerers-list" class="offer-names-list">
+                    <div id="offerers-list-header" class="offer-names-list-header  clickable k-state-selected">&gt; Tous les Nobles &lt;</div>
+                    <dl id="offerers-list-members" class="list-members">
+                    </dl>
+                </div>
+                <div id="offerers-pie-chart" class="chart pie-chart"></div>
+            </div>
+            <div id="main-offerees" class="analysis-sub-content bordered">
+                <div id="offerees-chart-title" class="sub-content-title">Répartition par Dieu</div>
+                <div id="offerees-list" class="offer-names-list">
+                    <div id="offerees-list-header" class="offer-names-list-header  clickable k-state-selected">&gt; Tous les Dieux &lt;</div>
+                    <dl id="offerees-list-members" class="list-members">
+                    </dl>
+                </div>
+                <div id="offerees-pie-chart" class="chart pie-chart"></div>
+            </div>
+        </div>
+    </script>
+
+    <script id="market-analysis-tmpl" type="text/x-handlebars-template">
+        <div class="analysis-main-content">
+            <div class="market-items-list-holder bordered">
+                <div class="back-link">
+                    <a href="#" class="k-button" id="back-to-entry-input-from-market">&lt;&lt; Retour</a>
+                </div>
+                <div id="nobles-list" class="nobles-names-list bordered">
+                    <div id="noble-list-header" class="offer-names-list-header clickable k-state-selected">&gt; Tous les Nobles &lt;</div>
+                    <dl id="nobles-list-members" class="list-members">
+                    </dl>
+                </div>
+                <div id="market-items-treeview" class="market-items-list"></div>
+            </div>
+            <div class="main-market-charts">
+                <div id="buyer-seller-charts-holder">
+                    <div id="market-buyers-pie-chart" class="chart pie-chart bordered"></div>
+                    <div id="market-sellers-pie-chart" class="chart pie-chart bordered"></div>
+                </div>
+                <div id="market-stacked-column-buys-chart" class="chart wide-chart bordered"></div>
+                <div id="market-stacked-column-sells-chart" class="chart wide-chart bordered"></div>
+            </div>
+        </div>
+    </script>
+
+    <script id="offerer-list-item-tmpl" type="text/x-handlebars-template">
+        <dt class="offerer-name clickable" offerer="{{Name}}">{{Name}} : {{Value}}</dt>
+    </script>
+
+    <script id="offeree-list-item-tmpl" type="text/x-handlebars-template">
+        <dt class="offeree-name clickable" offeree="{{Name}}">{{Name}} : {{Value}}</dt>
+    </script>
+
+    <script id="noble-list-item-tmpl" type="text/x-handlebars-template">
+        <dt class="noble-name clickable" noble="{{Name}}">{{Name}}</dt>
+    </script>
+
+    <script id="cenote-sample-tmpl" type="text/txt">
+        Année 16 - Mois 2
+        Tenotchtitoplak a donné 5à Ix Chel
+        MefistoS a donné 2à Votan
+        Aucun ennemi à l'horizon, les dieux vous suspectent
+        Année 16 - Mois 1
+        Azka a donné 5à Kukulkan
+        La paix est une injure aux dieux
+        Année 15 - Mois 18
+        MefistoS a donné 2à Itzamna
+        Elisatopeck a donné 5à Yum Kaax
+        Chowakilpenis a donné 120à Uayeb
+        Les dieux n'aiment pas la paix
+        Année 15 - Mois 17
+        Pakal a donné 2à Votan
+        Les dieux n'aiment pas la paix
+        Année 15 - Mois 16
+        Pakal a donné 40à Ix Chel
+        Pakal a donné 80à Ix Chel
+        Elisatopeck a donné 1à Yum Kaax
+        Azka a donné 5à Kukulkan
+        Les dieux réclament du sang
+    </script>
+
+    <script id="market-sample-tmpl" type="text/txt">
+        Année 17 - Mois 2
+        Chowakilpenis a acheté 7 bottes de maguey
+        P’Iksel a vendu 1 quartier de poisson
+        P’Iksel a vendu 2 blocs d'hématite
+        Chowakilpenis a vendu 2 gros rondins
+        Koulic a acheté 2 blocs d'hématite
+        Koulic a acheté 2 gros rondins
+        Année 17 - Mois 1
+        Chowakilpenis a acheté 2 cordes
+        P’Iksel a acheté 1 houe
+        P’Iksel a acheté 3 machettes
+        Chowakilpenis a vendu 3 gros rondins
+        Koulic a acheté 3 gros rondins
+        Chowakilpenis a acheté 2 pots de cacao
+        Azka a acheté 1 lance
+        Pakal a acheté 1 rondin de grande qualité
+        Elisatopeck a vendu 6 bottes de chaume
+        Gr@ce a vendu 3 tas de branchages
+        Année 16 - Mois 18
+        Tenotchtitoplak a acheté 1 morceau d'écorce de ficus
+        Tenotchtitoplak a acheté 1 sac de maïs
+        Koulic a acheté 1 botte de chaume
+        Elisatopeck a acheté 2 tas de branchages
+        papakkamayo a vendu 3 paniers de fruits
+        papakkamayo a vendu 12 sacs de maïs
+        Année 16 - Mois 17
+        papakkamayo a vendu 8 sacs de maïs
+        papakkamayo a vendu 1 quartier de viande
+        Kamaxi a acheté 2 sacs de coquillages
+        Chowakilpenis a vendu 1 coutelas
+        Azka a vendu 2 blocs d'obsidienne
+        Azka a acheté 1 coutelas
+    </script>
+
+
+</head>
+<body>
+
+<div id="container">
+    <div id="header">
+        <h1>
+            <a href="index-old.html" class="page-title">Mayajaw Kikafékoa</a>
+        </h1>
+
+        <h3 id="subtitle">Créé par Xatocoatl </h3>
+    </div>
+
+    <div id="main">
+        <div>Veuillez patienter pendant que les esclaves examinent le contenu du cénote...</div>
+    </div>
+</div>
+
+<!-- Libs on CDN -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highcharts/2.3.5/highcharts.js"></script>
+<script src="http://cdn.kendostatic.com/2012.3.1114/js/kendo.all.min.js"></script>
+<script src="js/libs/angular-1.0.4.min.js"></script>
+
+<!-- App Data -->
+<!-- Utils -->
+<script src="src/utils/utils.js" charset="utf-8"></script>
+<script src="src/utils/marketItemsUtils.js" charset="utf-8"></script>
+<script src="src/utils/parseUtils.js" charset="utf-8"></script>
+<script src="src/utils/chartsUtils.js"></script>
+
+<!-- Models -->
+<script src="src/backbone/models/Offering.js"></script>
+<script src="src/backbone/models/MonthlyOfferings.js"></script>
+<script src="src/backbone/models/MarketOp.js"></script>
+<script src="src/backbone/models/MonthlyMarketOps.js"></script>
+<!-- Collections -->
+<script src="src/backbone/collections/OfferingsList.js"></script>
+<script src="src/backbone/collections/MarketOpsList.js"></script>
+<!-- Views -->
+<script src="src/backbone/views/EntryInputView.js"></script>
+<script src="src/backbone/views/CenoteAnalysisView.js"></script>
+<script src="src/backbone/views/MarketAnalysisView.js"></script>
+<!-- Routers -->
+<script src="src/backbone/routers/AppRouter.js"></script>
+
+<script src="src/backbone/routers/AppRouter.js"></script>
+
+<!-- App entry point -->
+<script src="src/application.js"></script>
+
+
+</body>
+</html>
