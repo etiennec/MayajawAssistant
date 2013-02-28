@@ -24,6 +24,10 @@
     text-decoration: none;
 }
 
+ul {
+    list-style-type: none;
+}
+
 .back-link {
     padding-top: 10px;
     padding-left: 20px;
@@ -92,7 +96,7 @@ textarea.input-text {
 }
 
 .clickable:hover {
-    background-color: LightCyan;
+    background-color: LightBlue;
 }
 
 .entry-input-zone {
@@ -131,13 +135,18 @@ div.entry-input-zone {
     width: auto;
 }
 
-.market-items-list, .nobles-names-list{
+.market-items-list, .nobles-names-list {
     clear: both;
-    padding: 20px 5px;
+    padding: 10px 5px;
 }
 
 .active {
-    background-color: LightCyan;
+    background-color: Turquoise;
+}
+
+.category-label {
+    font-style: italic;
+    font-weight: bold;
 }
 
 

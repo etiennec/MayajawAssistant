@@ -3,7 +3,7 @@ angular.module('mjassistant', []).
         $routeProvider.
             when('/home', {templateUrl: 'src/templates/inputScreen.html', controller: EntryInputCtrl}).
             when('/cenote', {templateUrl: 'src/templates/cenoteAnalysis.html', controller: CenoteCtrl}).
-            when('/market', {templateUrl: 'src/templates/marketAnalysis.html', controller: UtilsCtrl}).
+            when('/market', {templateUrl: 'src/templates/marketAnalysis.html', controller: MarketCtrl}).
             otherwise({redirectTo: '/home'});
     }])
     .service('sharedDataService', function () {

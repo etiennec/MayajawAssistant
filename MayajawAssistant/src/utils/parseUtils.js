@@ -34,7 +34,7 @@ ParseUtils.parseHeaderMarketOpsLine = function (line) {
     if (headerMatch === null) {
         return null;
     } else {
-        return  new MonthlyMarketOps({year: parseInt(headerMatch[1]), month: parseInt(headerMatch[2])});
+        return  new MonthlyMarketOps(parseInt(headerMatch[2]), parseInt(headerMatch[1]));
     }
 
 }
@@ -73,7 +73,7 @@ ParseUtils.parseMarketOpLine = function (line) {
         opMatch = ParseUtils.buyLineMatcher.exec(line);
     }
     if (opMatch != null) {
-        op = new MarketOp({who: $.trim(opMatch[1]), howmuch: (seller ? parseInt(opMatch[2]) : parseInt(opMatch[2]) * -1), what: $.trim(MarketItemsUtils.normalizeMarketItem(opMatch[3]))});
+        op = new MarketOp($.trim(opMatch[1]), $.trim(MarketItemsUtils.normalizeMarketItem(opMatch[3])), (seller ? parseInt(opMatch[2]) : parseInt(opMatch[2]) * -1));
     }
 
     return op;
@@ -124,40 +124,38 @@ ParseUtils.parseCenoteInput = function (rawText) {
 
 ParseUtils.parseMarketInput = function (rawText) {
 
-    var marketOpsList = new MarketOpsList
-
-    var currentMonthOps = null
-
-    var lines = rawText.split('\n')
+    var marketOpsList = new MarketOpsList;
+    var currentMonthOps = null;
+    var lines = rawText.split('\n');
 
     for (var i = 0; i < lines.length; i++) {
-        var line = lines[i]
+        var line = lines[i];
         if (line.trim().length != 0) {
             // First, check if this is a year/month line.
-            var tempMonthOps = ParseUtils.parseHeaderMarketOpsLine(line)
+            var tempMonthOps = ParseUtils.parseHeaderMarketOpsLine(line);
 
             if (tempMonthOps === null) {
                 // Normal line : New MarketOp in MarketOps
-                var marketOp = ParseUtils.parseMarketOpLine(line)
+                var marketOp = ParseUtils.parseMarketOpLine(line);
                 if (marketOp !== null) {
                     // We have a new offering to add for the current month
                     if (currentMonthOps !== null) {
-                        currentMonthOps.mergeOp(marketOp)
+                        currentMonthOps.mergeOp(marketOp);
                     } else {
-                        currentMonthOps = new MonthlyMarketOps
-                        currentMonthOps.mergeOp(marketOp)
-                        marketOpsList.add(currentMonthOps)
+                        currentMonthOps = new MonthlyMarketOps();
+                        currentMonthOps.mergeOp(marketOp);
+                        marketOpsList.monthlyOps.push(currentMonthOps);
                     }
                 }
             } else {
                 // Header line : New Offerings in OfferingsList
-                currentMonthOps = tempMonthOps
-                marketOpsList.add(currentMonthOps)
+                currentMonthOps = tempMonthOps;
+                marketOpsList.monthlyOps.push(currentMonthOps);
             }
         }
     }
 
-    ParseUtils.sortMonthlyCollection(marketOpsList.monthlyOps)
+    ParseUtils.sortMonthlyCollection(marketOpsList.monthlyOps);
 
     return marketOpsList;
 }

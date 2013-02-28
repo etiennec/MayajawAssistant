@@ -9,7 +9,7 @@
         <div id="offerers-list" class="offer-names-list">
             <div id="offerers-list-header" class="offer-names-list-header  clickable" ng-click=" selectNoble(''); renderOffererChart()" ng-class="{active: selectedNoble == ''}">
                 &gt; Tous les Nobles &lt;</div>
-            <dl id="offerers-list-members" class="list-members unstyled">
+            <dl id="offerers-list-members" class="list-members">
                 <dt ng-repeat="noble in nobles">
                     <span class="clickable" ng-click="selectNoble(noble.Name); renderOffererChart(noble.Name)" ng-class="{active: noble.Name == selectedNoble}">{{noble.Name}} : {{noble.Value}}</span>
                 </dt>

@@ -1,3 +1,65 @@
+Année 19 - Mois 10
+Koulic a donné 9à Kukulkan (9 bottes de chaume)
+P’Iksel a donné 10à Kukulkan (2 paniers de fruits)
+Chowakilpenis a donné 1à Kukulkan (1 botte de chaume)
+papakkamayo a donné 200à Kukulkan (1 crocodile)
+Tenotchtitoplak a donné 2à Kukulkan (1 panier de crabes)
+Kamaxi a donné 4à Kukulkan (4 bottes de chaume)
+Kamaxi a donné 126à Kukulkan (Sinikqek Kankim)
+Kamaxi a donné 132à Kukulkan (Yo Tseelkan)
+Kamaxi a donné 132à Kukulkan (Tsumap Pankoxo)
+Année 19 - Mois 9
+Koulic a donné 3à Kukulkan (3 bottes de feuilles de palmier)
+Koulic a donné 2à Kukulkan (2 bottes de chaume)
+Tenotchtitoplak a donné 1à Kukulkan (1 botte de chaume)
+Kamaxi a donné 150à Kukulkan (Poolkeb Xanapool)
+Kamaxi a donné 144à Kukulkan (Wak Mualko)
+Kamaxi a donné 1à Kukulkan (1 botte de chaume)
+Hypoteck a donné 1à Kukulkan (1 sac de sel)
+Les prières de Azka ont honoré Kukulkan : +28
+! Les montagnes ont toujours fait la guerre aux plaines (Victor Hugo)
+Année 19 - Mois 8
+Elisatopeck a donné 3à Kukulkan (1 sac de manioc)
+Chowakilpenis a donné 200à Kukulkan (1 crocodile)
+Koulic a donné 8à Kukulkan (4 bottes de maguey)
+Koulic a donné 3à Kukulkan (3 bottes de feuilles de palmier)
+Koulic a donné 20à Kukulkan (10 bottes de maguey)
+Hypoteck a donné 5à Kukulkan (1 sac de maïs)
+Kamaxi a donné 2à Kukulkan (2 bottes de chaume)
+Kamaxi a donné 126à Kukulkan (Mask Balajchuc)
+Kamaxi a donné 126à Kukulkan (Sool Tzilmask)
+Kamaxi a donné 132à Kukulkan (Cholmam Seenklil)
+Les sacrifices de Azka ont honoré Kukulkan : +14
+! Vous paierez le tribut de la paix
+Année 19 - Mois 7
+Kamaxi a donné 144à Kukulkan (Paalsik Nuunyax)
+Tenotchtitoplak a donné 2à Kukulkan (2 bottes de chaume)
+papakkamayo a donné 40à Kukulkan (1 pécari)
+Elisatopeck a donné 4à Kukulkan (4 bottes de chaume)
+Elisatopeck a donné 5à Kukulkan (1 panier de fruits)
+Les prières de Azka ont honoré Kukulkan : +28
+Les prières de Koulic ont honoré Kukulkan : +50
+! La paix est une injure aux dieux
+Année 19 - Mois 6
+Chowakilpenis a donné 80à Kukulkan (1 cerf)
+Kamaxi a donné 10à Kukulkan (1 collier de coquillages)
+Kamaxi a donné 1à Kukulkan (1 botte de chaume)
+Les sacrifices de Azka ont honoré Kukulkan : +5
+! Aucun ennemi à l'horizon, les dieux vous suspectent
+Année 19 - Mois 5
+Koulic a donné 4à Kukulkan (2 bottes de maguey)
+Koulic a donné 16à Kukulkan (8 bottes de maguey)
+Kamaxi a donné 1à Kukulkan (1 botte de chaume)
+Elisatopeck a donné 16à Kukulkan (8 paniers de légumes)
+Kamaxi a donné 138à Kukulkan (Olel Rixchol)
+Kamaxi a donné 132à Kukulkan (Loob Its)
+Kamaxi a donné 132à Kukulkan (Sunuun Bikich)
+Kamaxi a donné 50à Kukulkan (5 colliers de coquillages)
+Kamaxi a donné 15à Kukulkan (1 pendentif d'obsidienne)
+Hypoteck a donné 5à Kukulkan (1 sac de maïs)
+Les prières de Azka ont honoré Kukulkan : +35
+Les prières de Koulic ont honoré Kukulkan : +41
+! La crainte de la guerre est pire que la guerre (Sénèque)
 Année 19 - Mois 4
 Koulic a donné 18à Kukulkan (9 bottes de maguey)
 Koulic a donné 8à Kukulkan (4 bottes de maguey)
@@ -5,6 +67,7 @@ P’Iksel a donné 50à Kukulkan (10 paniers de fruits)
 Hypoteck a donné 3à Itzamna (1 sac de manioc)
 Kamaxi a donné 144à Kukulkan (Kal Kucham)
 Kamaxi a donné 132à Kukulkan (Anayo Waahbaak)
+! La guerre préserve les dieux
 Année 19 - Mois 3
 Kamaxi a donné 126à Kukulkan (Yichchuj Siar)
 Kamaxi a donné 138à Kukulkan (Bik Hiltoon)
@@ -366,34 +429,3 @@ Aucun ennemi à l'horizon, les dieux vous suspectent
 Année 16 - Mois 9
 Pakal a donné 5à Chaak (1 peau de bête)
 La paix est une injure aux dieux
-Année 16 - Mois 8
-P’Iksel a donné 5à Votan (1 cruche de vin de maïs)
-Azka a donné 5à Kukulkan (1 peau de bête)
-Azka a donné 5à Kukulkan (1 peau de bête)
-Les dieux n'aiment pas la paix
-Année 16 - Mois 7
-Kamaxi a donné 10à Kukulkan (5 bottes de maguey)
-Chowakilpenis a donné 120à Uayeb (1 aigle)
-Pakal a donné 15à Kukulkan (3 sacs de coton)
-P’Iksel a donné 5à Votan (1 cruche de vin de maïs)
-Les prières de Pakal ont honoré Kukulkan : +28
-Les dieux n'aiment pas la paix
-Année 16 - Mois 6
-Chowakilpenis a donné 80à Uayeb (1 cerf)
-Azka a donné 5à Kukulkan (1 peau de bête)
-La paix pour le peuple, leur sang pour les dieux
-Année 16 - Mois 5
-Chowakilpenis a donné 120à Uayeb
-Azka a donné 5à Kukulkan
-Elisatopeck a donné 2à Yum Kaax
-Pakal a donné 15à Kukulkan (3 sacs de coton)
-Les dieux réclament du sang
-Année 16 - Mois 4
-Tenotchtitoplak a donné 5à Ix Chel
-P’Iksel a donné 5à Votan
-Pakal a donné 5à Kukulkan
-Azka a donné 5à Kukulkan
-Les dieux n'aiment pas la paix
-Année 16 - Mois 3
-P’Iksel a donné 5à Votan
-La paix pour le peuple, leur sang pour les dieux
