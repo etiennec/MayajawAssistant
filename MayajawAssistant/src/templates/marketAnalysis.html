@@ -1,0 +1,43 @@
+<div class="analysis-main-content">
+    <div class="market-items-list-holder bordered">
+        <div class="back-link">
+            <a href="#" class="button" id="back-to-entry-input-from-market">&lt;&lt; Retour</a>
+        </div>
+        <div id="nobles-list" class="nobles-names-list bordered">
+            <div id="offerers-list-header" class="offer-names-list-header  clickable" ng-click="selectNoble(null); renderCharts()"
+                 ng-class="{active: selectedNoble == null}">&gt; Tous les Nobles &lt;</div>
+            <dl id="offerers-list-members" class="list-members">
+                <dt ng-repeat="noble in nobles">
+                    <span class="clickable" ng-click="selectNoble(noble.Name); renderCharts()"
+                          ng-class="{active: noble.Name == selectedNoble}">{{noble.Name}}</span>
+                </dt>
+            </dl>
+            </dl>
+        </div>
+        <div id="market-items" class="market-items-list">
+            <div><ul><li><span class="category-label clickable" ng-click="toggleCategory(null); renderCharts()">&gt; Tous les objets&lt;</span></li></ul></div>
+            <ul id="market-items-list-members" class="list-members">
+                <div ng-repeat="category in itemsByCategory">
+                    <li>
+                        <span class="category-label clickable" ng-click="toggleCategory(category.category); renderCharts()">{{category.category}}</span>
+                    </li>
+                    <ul>
+                        <li ng-repeat="item in category.items">
+                            <span><input type="checkbox"
+                                         ng-model="item.isSelected" ng-click="renderCharts()"/>{{item.item}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+
+        </div>
+    </div>
+    <div class="main-market-charts">
+        <div id="buyer-seller-charts-holder">
+            <div id="market-buyers-pie-chart" class="chart pie-chart bordered"></div>
+            <div id="market-sellers-pie-chart" class="chart pie-chart bordered"></div>
+        </div>
+        <div id="market-stacked-column-buys-chart" class="chart wide-chart bordered"></div>
+        <div id="market-stacked-column-sells-chart" class="chart wide-chart bordered"></div>
+    </div>
+</div>

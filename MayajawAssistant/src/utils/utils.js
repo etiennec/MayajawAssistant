@@ -1,21 +1,4 @@
-// Not used
-Handlebars.getTemplate = function (name) {
-    if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
-        $.ajax({
-            url: 'templates/' + name + '.handlebars',
-            success: function (data) {
-                if (Handlebars.templates === undefined) {
-                    Handlebars.templates = {};
-                }
-                Handlebars.templates[name] = Handlebars.compile(data);
-            },
-            async: false
-        });
-    }
-    return Handlebars.templates[name];
-};
-
-this.MSUtils = {};
+this.MAUtils = {};
 
 var randomQuotes = [
     "PARCE QUE !",
@@ -34,11 +17,11 @@ var randomQuotes = [
     "afin d'apaiser la colère de Yul contre les branquignols de Kaminaljuyu qui font rien qu'à chouiner tout le temps, surtout ce gros boulet de Kamaxi"
 ]
 
-MSUtils.getRandomQuote = function () {
+MAUtils.getRandomQuote = function () {
     return randomQuotes[Math.floor(Math.random() * randomQuotes.length)];
 }
 
-MSUtils.addToSet = function(value, arraySet) {
+MAUtils.addToSet = function(value, arraySet) {
     if ($.inArray(value, arraySet) < 0) {
         arraySet.push(value)
     }
