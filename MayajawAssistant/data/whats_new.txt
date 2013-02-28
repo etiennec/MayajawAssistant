@@ -1,7 +1,0 @@
-1.0.1: Ajout des objets suivants(Gilead):
-aiguillon de raie
-morceau de papier
-panier de champignons
-panier de champignons halu
-pot de gelée royale
-tablette *
