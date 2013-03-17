@@ -169,3 +169,28 @@ ParseUtils.sortMonthlyCollection = function (monthlyCollection) {
         return  a.month - b.month;
     })
 }
+
+ParseUtils.getMockDomainInput = function () {
+
+    var mockSlave1 = new Slave(1, "Yam Kuux", new Competences(2, 4, 8, 10, 3, 1));
+    var mockSlave2 = new Slave(2, "Ich Xel", new Competences(5, 3, 9, 8, 4, 4));
+    var mockSlave3 = new Slave(3, "Boyon Lokte", new Competences(10, 2, 2, 4, 1, 1));
+
+    var mockBuilding1 = new Building(1, "mine 1", new Type("mine"), 2, new Activity("Extraction de calcaire", new Competences(0.5, 0.15, 0.35, 0, 0, 0)));
+    var mockBuilding2 = new Building(2, "manu 1", new Type("manufacture"), 1, new Activity("Fabrication de cordes", new Competences(0, 0.4, 0.1, 0.4, 0.1, 0)));
+    var mockBuilding3 = new Building(3, "manu 2", new Type("manufacture"), 1, new Activity("Fabrication de sacs", new Competences(0, 0.4, 0.1, 0.4, 0.1, 0)));
+    var mockBuilding4 = new Building(4, "sel", new Type("baraque de cueilleurs"), 1, new Activity("Ramassage de sel", new Competences(0.3, 0, 0.7, 0, 0, 0)));
+
+    var assignments = {
+        1: 1, // Slave 1 is in building 1
+        2: 3, // Slave 2 is in building 2
+        3: null // Slave 3 is in no building (likley in manoir at that time).
+    };
+
+    return {
+        slaves: [mockSlave1, mockSlave2, mockSlave3],
+        buildings: [mockBuilding1, mockBuilding2, mockBuilding3, mockBuilding4],
+        assignments: assignments
+    }
+
+}

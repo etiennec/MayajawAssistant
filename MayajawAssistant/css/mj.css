@@ -65,7 +65,7 @@ div .chart {
 
 a.input-button {
     clear: both;
-    width: 500px;
+    width: 300px;
     float: left;
     padding-left: 20px;
     padding-top: 10px;
@@ -101,7 +101,7 @@ textarea.input-text {
 
 .entry-input-zone {
     float: left;
-    width: 40%;
+    width: 27%;
     margin: 20px;
     padding: 30px;
 }
@@ -149,4 +149,64 @@ div.entry-input-zone {
     font-weight: bold;
 }
 
+.single-line {
+    clear: both;
+}
 
+.line-first-box, .empty-first-box {
+    width: 250px;
+
+}
+
+.line-box {
+    width: 100px;
+}
+
+.line-box, .line-first-box, .empty-first-box {
+    float: left;
+    text-align: center;
+}
+
+.empty-first-box {
+    border-style: ridge;
+    border: thin solid #FFFFFF;
+}
+
+.slaves-line .line-first-box, .slaves-line .line-box {
+    border-style: ridge;
+    border: thin solid #000000;
+}
+
+.building-line .line-first-box, .building-line .line-box {
+    border: thin solid #64c8c8;
+}
+
+.red {
+    color: red;
+    font-weight: bold;
+}
+
+.green {
+    color: green;
+    font-weight: bold;
+}
+
+.building-occupying {
+    background-color: yellow;
+}
+
+.building-full {
+    background-color: red;
+}
+
+.building-can-occupy {
+    background-color: green;
+}
+
+.slave-busy {
+    background-color: yellow;
+}
+
+.slave-free {
+    background-color: green;
+}

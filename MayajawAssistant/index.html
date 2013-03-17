@@ -6,7 +6,9 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 
     <link rel="stylesheet" href="css/mj.css" type="text/css" media="screen" charset="utf-8"/>
-    <link rel="stylesheet" href="css/foundation.min.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="css/jquery-ui-1.10.2.custom.min.css" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="css/angular-ui.min.css" type="text/css" media="screen" charset="utf-8"/>
 </head>
 <body>
 
@@ -26,12 +28,19 @@
 
 <!-- Libs on CDN -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/highcharts/2.3.5/highcharts.js"></script>
-<!-- <script src="js/libs/angular-1.0.4.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/0.7.0/angular-strap.min.js"></script> -->
+
 <script src="js/libs/jquery-1.8.2.js"></script>
-<script src="js/libs/highcharts.src.js"></script> -->
+<script src="js/libs/jquery-ui-1.10.2.custom.min.js"></script>
+<script src="js/libs/angular-1.0.4.min.js"></script>
+<script src="js/libs/highcharts.src.js"></script>
+<script src="js/libs/angular-ui.min.js"></script>
+<script src="js/libs/angular-ui/sortable.js"></script>
+
 
 <!-- App Data -->
 <!-- Utils -->
@@ -50,11 +59,17 @@
 <script src="src/models/Market/MarketOp.js" charset="utf-8"></script>
 <script src="src/models/Market/MonthlyMarketOps.js" charset="utf-8"></script>
 <script src="src/models/Market/MarketOpsList.js" charset="utf-8"></script>
+<script src="src/models/Domain/Activity.js" charset="utf-8"></script>
+<script src="src/models/Domain/Building.js" charset="utf-8"></script>
+<script src="src/models/Domain/Type.js" charset="utf-8"></script>
+<script src="src/models/Domain/Competences.js" charset="utf-8"></script>
+<script src="src/models/Domain/Slave.js" charset="utf-8"></script>
 
 <!-- Controllers -->
 <script src="src/controllers/EntryInputCtrl.js" charset="utf-8"></script>
 <script src="src/controllers/CenoteCtrl.js" charset="utf-8"></script>
 <script src="src/controllers/MarketCtrl.js" charset="utf-8"></script>
+<script src="src/controllers/DomainCtrl.js" charset="utf-8"></script>
 <script src="src/controllers/UtilsCtrl.js" charset="utf-8"></script>
 
 

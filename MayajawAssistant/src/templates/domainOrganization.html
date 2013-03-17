@@ -1,0 +1,41 @@
+<div class="back-link">
+    <a href="#" class="btn" id="back-to-entry-input-from-domain">&lt;&lt; Retour</a>
+</div>
+<div>
+    <ul>
+        <li>
+            <div class="single-line slaves-line">
+                <span class="empty-first-box">
+                    <span>&nbsp;</span>
+                </span>
+                <span class="line-box" ng-repeat="slave in data.slaves"
+                      ng-class="{true: 'slave-free', false: 'slave-busy'}[(data.assignments[slave.id]==null)]"
+                      ng-click="reassign(slave.id, null)">>
+                        <span>{{slave.name}}</span>
+                </span>
+
+            </div>
+        </li>
+    </ul>
+
+    <ul ng-model="data.buildings" ui-sortable>
+        <li ng-repeat="building in data.buildings">
+            <div class="single-line building-line">
+                <span class="line-first-box clickable" ng-click="sortSlavesByBuilding(building.id)">
+                    {{building.name}}
+                    <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)">
+                        <span ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
+                    </span>
+                </span>
+                <span class="line-box" ng-repeat="slave in data.slaves"
+                      ng-class="{'occupying': 'building-occupying', 'full': 'building-full', 'free': 'building-can-occupy'}[getSlaveBuildingStatus(slave.id, building.id)]"
+                      ng-click="reassign(slave.id, building.id)">
+                    <span>{{ computeScore(slave.comps, building.activity.comps) }}</span>
+                </span>
+            </div>
+        </li>
+    </ul>
+    <div ng-repeat=" slave in data.slaves">
+        <span>{{ slave }}</span>
+    </div>
+</div>

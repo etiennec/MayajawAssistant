@@ -1,0 +1,11 @@
+ var mockSlave1 = new Slave("Yam Kuux", new Competences(2, 4, 8, 10, 3, 1));
+    var mockSlave2 = new Slave("Ich Xel", new Competences(5, 3, 9, 8, 4, 4));
+    var mockSlave3 = new Slave("Boyon Lokte", new Competences(10, 2, 2, 4, 1, 1));
+
+    var mockBuilding1 = new Building("mine 1", new Type("mine"), 2, new Activity("Extraction de calcaire", new Competences(0.5, 0.15, 0.35, 0, 0, 0)));
+    var mockBuilding2 = new Building("manu 1", new Type("manufacture"), 1, new Activity("Fabrication de cordes", new Competences(0, 0.4, 0.1, 0.4, 0.1, 0)));
+
+    return {
+        slaves: [mockSlave1, mockSlave2, mockSlave3],
+        buildings: [mockBuilding1, mockBuilding2]
+    }
