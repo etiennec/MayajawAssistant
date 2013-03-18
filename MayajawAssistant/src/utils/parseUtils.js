@@ -13,6 +13,7 @@ ParseUtils.buyLineMatcher = /(.+) a achet. (\d+) (.+)/;
 //ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#.+<table>(.+)<\/table>/g;
 ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]+?<table>([\s\S]+?)<\/table>/g;
 ParseUtils.buildingNameMatcher = /<b>([^<]*?)(<b>&ndash;<\/b>)?<\/b>(<i>.+<\/i><b><\/b>)?( : (.*))?<div class='rapports'>/;
+ParseUtils.domainSlaveMatcher = /m\('<img width=55 height=68  style=\\'float:left\\' src=\\'i\/avatars[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?<\/div><b>(.*?)<\/b>[^\)]*\)/g;
 
 // Parse a line into a header line, i.e. year/month line.
 // Returns a new MonthlyOfferings if parsed successfully, null else.
@@ -205,7 +206,7 @@ ParseUtils.parseBuildingInfo = function (domainItemStr) {
         // There are bullets after the name if level > 1.
         var level = 0;
         var name = nameMatch[1].trim();
-        while (name.indexOf('&bull;', name.length - '&bull;'.length) !== -1) {
+        while (ParseUtils.endsWith(name, '&bull;')) {
             name = name.substr(0, name.length - '&bull;'.length);
             level++;
         }
@@ -227,8 +228,31 @@ ParseUtils.parseBuildingInfo = function (domainItemStr) {
 
 ParseUtils.parseSlavesInfo = function (domainItemStr) {
     var slaves = [];
+    var slaveMatch;
 
-    slaves.push(new Slave());
+    while (slaveMatch = ParseUtils.domainSlaveMatcher.exec(domainItemStr)) {
+        var slave = new Slave();
+        slave.comps.FOR = getCompFromPixels(slaveMatch[1]);
+        slave.comps.DEX = getCompFromPixels(slaveMatch[2]);
+        slave.comps.END = getCompFromPixels(slaveMatch[3]);
+        slave.comps.INT = getCompFromPixels(slaveMatch[4]);
+        slave.comps.PER = getCompFromPixels(slaveMatch[5]);
+        slave.comps.CHA = getCompFromPixels(slaveMatch[6]);
+        slave.name = cleanNameSuffix(slaveMatch[7]);
+        slaves.push(slave);
+    }
+
+    function getCompFromPixels(pixelsStr) {
+        return (parseFloat(pixelsStr) + 2) / 1.5;
+    }
+
+    function cleanNameSuffix(name) {
+        name = ParseUtils.removeSuffix(name, ' de Kaminaljuyù');
+        name = ParseUtils.removeSuffix(name, ' de Takalik');
+        name = ParseUtils.removeSuffix(name, ' d\'Iximché');
+        name = ParseUtils.removeSuffix(name, ' d\'Izapa');
+        return name;
+    }
 
     return slaves;
 }
@@ -265,4 +289,16 @@ ParseUtils.parseDomainInput = function (domainHtmlSource) {
     }
 
     return domain;
+}
+
+
+ParseUtils.endsWith = function (string, suffix) {
+    return string.indexOf(suffix, string.length - suffix.length) !== -1;
+}
+
+ParseUtils.removeSuffix = function (string, suffix) {
+    while (ParseUtils.endsWith(string, suffix)) {
+        string = string.substr(0, string.length - suffix.length);
+    }
+    return string;
 }

@@ -199,6 +199,7 @@ div.entry-input-zone {
 .slave-box, .value-box {
     width: 100px !important;
     table-layout: fixed;
+    white-space: nowrap;
 }
 
 .value-box {
@@ -208,6 +209,7 @@ div.entry-input-zone {
 .building-box {
     width: 250px !important;
     table-layout: fixed;
+    white-space: nowrap;
 }
 
 .building-line:hover {
@@ -217,4 +219,12 @@ div.entry-input-zone {
 .ui-scrollfix {
     position: fixed;
     top: 0px;
+}
+
+table tr td {
+    width: 100px !important;
+}
+
+table tr td:first-child {
+    width: 250px !important;
 }

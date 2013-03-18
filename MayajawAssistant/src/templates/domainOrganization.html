@@ -13,7 +13,7 @@
             <th class="clickable slave-box"
                 ng-repeat="slave in data.slaves"
                 ng-class="{true: 'slave-free', false: 'slave-busy'}[(data.assignments[slave.id]==null)]"
-                ng-click="reassign(slave.id, null)">>
+                ng-click="reassign(slave.id, null)">
                 <span>{{slave.name}}</span>
             </th>
         </tr>

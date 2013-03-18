@@ -15,14 +15,17 @@ var randomQuotes = [
     "pour démontrer à ceusses de Takalik que les nobles de Kaminaljuyu veulent aider leur prochain, donc s'il vous plait ne nous attaquez pas, merci d'votre bon coeur.",
     "en signe de pénitence pour avoir paradé dans Kaminaljuyu avec juste une plume d'ara dans le cul",
     "afin d'apaiser la colère de Yul contre les branquignols de Kaminaljuyu qui font rien qu'à chouiner tout le temps, surtout ce gros boulet de Kamaxi"
-]
+];
+
 
 MAUtils.getRandomQuote = function () {
     return randomQuotes[Math.floor(Math.random() * randomQuotes.length)];
 }
 
-MAUtils.addToSet = function(value, arraySet) {
+MAUtils.addToSet = function (value, arraySet) {
     if ($.inArray(value, arraySet) < 0) {
         arraySet.push(value)
     }
 }
+
+
