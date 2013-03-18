@@ -151,6 +151,7 @@ div.entry-input-zone {
 
 .single-line {
     clear: both;
+    overflow-x: auto;
 }
 
 .line-first-box, .empty-first-box {
@@ -192,21 +193,27 @@ div.entry-input-zone {
 }
 
 .building-occupying {
-    background-color: yellow;
+    background-color: #90ee90;
+    color: #006400;
+    font-weight: bold;
 }
 
 .building-full {
-    background-color: red;
+    background-color: #d3d3d3;
+    color: #696969;
+    font-style: italic;
 }
 
 .building-can-occupy {
-    background-color: green;
+
 }
 
 .slave-busy {
-    background-color: yellow;
+    background-color: #d3d3d3;
+    font-style: italic;
+
 }
 
 .slave-free {
-    background-color: green;
+    font-weight: bold;
 }

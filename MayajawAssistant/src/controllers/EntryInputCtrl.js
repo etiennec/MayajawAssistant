@@ -27,8 +27,8 @@ function EntryInputCtrl($scope, $http, sharedDataService) {
     }
 
     $scope.processDomainInput = function() {
-        //sharedDataService.setDomainData(ParseUtils.parseDomainInput($scope.inputs.domain));
-        sharedDataService.setDomainData(ParseUtils.getMockDomainInput());
+        sharedDataService.setDomainData(ParseUtils.parseDomainInput($scope.inputs.domain));
+        //sharedDataService.setDomainData(ParseUtils.getMockDomainInput());
     }
 
 }

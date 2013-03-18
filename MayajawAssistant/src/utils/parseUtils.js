@@ -10,6 +10,9 @@ ParseUtils.prayerLineMatcher = /Les pri.res de (.+) ont honor. (.+) : \+(\d+)/;
 ParseUtils.sellLineMatcher = /(.+) a vendu (\d+) (.+)/;
 ParseUtils.buyLineMatcher = /(.+) a achet. (\d+) (.+)/;
 
+//ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#.+<table>(.+)<\/table>/g;
+ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]+?<table>([\s\S]+?)<\/table>/g;
+ParseUtils.buildingNameMatcher = /<b>([^<]*?)<\/b>( : (.*))?<div class='rapports'>/;
 
 // Parse a line into a header line, i.e. year/month line.
 // Returns a new MonthlyOfferings if parsed successfully, null else.
@@ -192,5 +195,74 @@ ParseUtils.getMockDomainInput = function () {
         buildings: [mockBuilding1, mockBuilding2, mockBuilding3, mockBuilding4],
         assignments: assignments
     }
+}
 
+ParseUtils.parseBuildingInfo = function (domainItemStr) {
+    var building = new Building();
+
+    var nameMatch = ParseUtils.buildingNameMatcher.exec(domainItemStr);
+    if (nameMatch != null) {
+        // There are bullets after the name if level > 1.
+        var level = 0;
+        var name = nameMatch[1].trim();
+        while (name.indexOf('&bull;', name.length - '&bull;'.length) !== -1) {
+            name = name.substr(0, name.length - '&bull;'.length);
+            level++;
+        }
+
+        building.name = name.trim();
+        building.level = level === 0 ? 1 : level;
+
+        if (nameMatch[3] !== undefined) {
+            var activity = new Activity(nameMatch[3]);
+            // TODO comp
+            building.activity = activity;
+        }
+
+    }
+
+    return building;
+}
+
+
+ParseUtils.parseSlavesInfo = function (domainItemStr) {
+    var slaves = [];
+
+    slaves.push(new Slave());
+
+    return slaves;
+}
+
+ParseUtils.parseDomainInput = function (domainHtmlSource) {
+    var domain = {slaves: [],
+        buildings: [],
+        assignments: {}
+    }
+
+    var matches;
+    var slaveIndex = 0;
+    var buildingIndex = 0;
+
+    while (matches = ParseUtils.domainBuildingInfoMatcher.exec(domainHtmlSource)) {
+        var domainItemStr = matches[1];
+        var building = ParseUtils.parseBuildingInfo(domainItemStr);
+        building.id = buildingIndex;
+
+        // There can be zero, 1 or more slaves per building
+        var slaves = ParseUtils.parseSlavesInfo(domainItemStr);
+
+        for (var i = 0; i < slaves.length; i++) {
+            var slave = slaves[i];
+            slave.id = slaveIndex;
+            domain.assignments[slaveIndex] = buildingIndex;
+            domain.slaves.push(slave);
+            slaveIndex++;
+        }
+
+        domain.buildings.push(building);
+
+        buildingIndex++;
+    }
+
+    return domain;
 }

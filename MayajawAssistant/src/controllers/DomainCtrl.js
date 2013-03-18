@@ -33,6 +33,15 @@ function DomainCtrl($scope, sharedDataService) {
         return null;
     }
 
+    $scope.isBuildingFull = function(buildingId) {
+        var building = getBuilding(buildingId);
+
+        var occupancy = building.getOccupancyArray($scope.data.assignments);
+
+        // Building is full if the last space is occupied.
+        return occupancy[occupancy.length - 1];
+    }
+
     // Return the status for the given slave and building:
     // 'free': slave is not in the building, you can assign the slave to the building
     // 'full': slave is not in the building, you cannot assign the slave to the building (building full)
@@ -46,9 +55,8 @@ function DomainCtrl($scope, sharedDataService) {
         // Let's check the last occupancy value: if true (i.e. full), then there's no more room.
         var building = getBuilding(buildingId);
 
-        var occupancy = building.getOccupancyArray($scope.data.assignments);
 
-        if (occupancy[occupancy.length - 1]) {
+        if ($scope.isBuildingFull(buildingId)) {
             return 'full';
         }
 

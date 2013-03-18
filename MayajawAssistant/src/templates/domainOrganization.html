@@ -21,7 +21,9 @@
     <ul ng-model="data.buildings" ui-sortable>
         <li ng-repeat="building in data.buildings">
             <div class="single-line building-line">
-                <span class="line-first-box clickable" ng-click="sortSlavesByBuilding(building.id)">
+                <span class="line-first-box clickable"
+                      ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
+                      ng-click="sortSlavesByBuilding(building.id)">
                     {{building.name}}
                     <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)">
                         <span ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
@@ -35,7 +37,4 @@
             </div>
         </li>
     </ul>
-    <div ng-repeat=" slave in data.slaves">
-        <span>{{ slave }}</span>
-    </div>
 </div>
