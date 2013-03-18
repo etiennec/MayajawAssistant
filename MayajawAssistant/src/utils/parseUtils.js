@@ -12,7 +12,7 @@ ParseUtils.buyLineMatcher = /(.+) a achet. (\d+) (.+)/;
 
 //ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#.+<table>(.+)<\/table>/g;
 ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]+?<table>([\s\S]+?)<\/table>/g;
-ParseUtils.buildingNameMatcher = /<b>([^<]*?)<\/b>( : (.*))?<div class='rapports'>/;
+ParseUtils.buildingNameMatcher = /<b>([^<]*?)(<b>&ndash;<\/b>)?<\/b>(<i>.+<\/i><b><\/b>)?( : (.*))?<div class='rapports'>/;
 
 // Parse a line into a header line, i.e. year/month line.
 // Returns a new MonthlyOfferings if parsed successfully, null else.
@@ -210,11 +210,11 @@ ParseUtils.parseBuildingInfo = function (domainItemStr) {
             level++;
         }
 
-        building.name = name.trim();
+        building.name = name.trim().replace('&rsquo;', "'");
         building.level = level === 0 ? 1 : level;
 
-        if (nameMatch[3] !== undefined) {
-            var activity = new Activity(nameMatch[3]);
+        if (nameMatch[5] !== undefined) {
+            var activity = new Activity(nameMatch[5]);
             // TODO comp
             building.activity = activity;
         }

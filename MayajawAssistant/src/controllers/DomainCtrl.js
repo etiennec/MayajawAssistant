@@ -81,5 +81,4 @@ function DomainCtrl($scope, sharedDataService) {
             $scope.data.assignments[slaveId] = buildingId;
         }
     }
-
 }

@@ -80,6 +80,11 @@ a.input-button {
     clear: both;
 }
 
+.analysis-main-content table {
+    table-layout: fixed;
+    overflow-x: auto;
+}
+
 .analysis-sub-content {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -149,39 +154,6 @@ div.entry-input-zone {
     font-weight: bold;
 }
 
-.single-line {
-    clear: both;
-    overflow-x: auto;
-}
-
-.line-first-box, .empty-first-box {
-    width: 250px;
-
-}
-
-.line-box {
-    width: 100px;
-}
-
-.line-box, .line-first-box, .empty-first-box {
-    float: left;
-    text-align: center;
-}
-
-.empty-first-box {
-    border-style: ridge;
-    border: thin solid #FFFFFF;
-}
-
-.slaves-line .line-first-box, .slaves-line .line-box {
-    border-style: ridge;
-    border: thin solid #000000;
-}
-
-.building-line .line-first-box, .building-line .line-box {
-    border: thin solid #64c8c8;
-}
-
 .red {
     color: red;
     font-weight: bold;
@@ -216,4 +188,33 @@ div.entry-input-zone {
 
 .slave-free {
     font-weight: bold;
+}
+
+.activity-label {
+    font-size: x-small;
+    font-style: italic;
+    color: #9a9a9a;
+}
+
+.slave-box, .value-box {
+    width: 100px !important;
+    table-layout: fixed;
+}
+
+.value-box {
+    text-align: center;
+}
+
+.building-box {
+    width: 250px !important;
+    table-layout: fixed;
+}
+
+.building-line:hover {
+    background-color: #f5f5dc;
+}
+
+.ui-scrollfix {
+    position: fixed;
+    top: 0px;
 }

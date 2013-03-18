@@ -1,40 +1,45 @@
 <div class="back-link">
     <a href="#" class="btn" id="back-to-entry-input-from-domain">&lt;&lt; Retour</a>
 </div>
-<div>
-    <ul>
-        <li>
-            <div class="single-line slaves-line">
-                <span class="empty-first-box">
-                    <span>&nbsp;</span>
-                </span>
-                <span class="line-box" ng-repeat="slave in data.slaves"
-                      ng-class="{true: 'slave-free', false: 'slave-busy'}[(data.assignments[slave.id]==null)]"
-                      ng-click="reassign(slave.id, null)">>
-                        <span>{{slave.name}}</span>
-                </span>
+<div class="analysis-main-content">
+    <table>
+        <colgroup>
+            <col class="building-box"/>
+            <col class="slave-box" ng-repeat="slave in data.slaves"/>
+        </colgroup>
+        <thead>
+        <tr ui-scrollfix>
+            <th class="building-box">&nbsp;</th>
+            <th class="clickable slave-box"
+                ng-repeat="slave in data.slaves"
+                ng-class="{true: 'slave-free', false: 'slave-busy'}[(data.assignments[slave.id]==null)]"
+                ng-click="reassign(slave.id, null)">>
+                <span>{{slave.name}}</span>
+            </th>
+        </tr>
+        </thead>
 
-            </div>
-        </li>
-    </ul>
-
-    <ul ng-model="data.buildings" ui-sortable>
-        <li ng-repeat="building in data.buildings">
-            <div class="single-line building-line">
-                <span class="line-first-box clickable"
-                      ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
-                      ng-click="sortSlavesByBuilding(building.id)">
+        <tbody ng-model="data.buildings" ui-sortable>
+        <tr class="building-line" ng-repeat="building in data.buildings">
+            <td class="clickable building-box"
+                ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
+                ng-click="sortSlavesByBuilding(building.id)">
+                <div>
                     {{building.name}}
                     <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)">
                         <span ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
                     </span>
-                </span>
-                <span class="line-box" ng-repeat="slave in data.slaves"
-                      ng-class="{'occupying': 'building-occupying', 'full': 'building-full', 'free': 'building-can-occupy'}[getSlaveBuildingStatus(slave.id, building.id)]"
-                      ng-click="reassign(slave.id, building.id)">
-                    <span>{{ computeScore(slave.comps, building.activity.comps) }}</span>
-                </span>
-            </div>
-        </li>
-    </ul>
+                </div>
+                <div class="activity-label" ui-if='building.activity.name != ""'>{{building.activity.name}}</div>
+            </td>
+            <td class="clickable value-box"
+                ng-repeat="slave in data.slaves"
+                ng-class="{'occupying': 'building-occupying', 'full': 'building-full', 'free': 'building-can-occupy'}[getSlaveBuildingStatus(slave.id, building.id)]"
+                ng-click="reassign(slave.id, building.id)">
+                <span>{{ computeScore(slave.comps, building.activity.comps) }}</span>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
 </div>
