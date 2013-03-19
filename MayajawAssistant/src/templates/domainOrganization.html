@@ -4,11 +4,13 @@
 <div class="analysis-main-content">
     <table>
         <colgroup>
+            <col class="building-score-box"/>
             <col class="building-box"/>
             <col class="slave-box" ng-repeat="slave in data.slaves"/>
         </colgroup>
         <thead>
-        <tr ui-scrollfix>
+        <tr>
+            <th class="building-score-box">Total</th>
             <th class="building-box">&nbsp;</th>
             <th class="clickable slave-box"
                 ng-repeat="slave in data.slaves"
@@ -21,22 +23,28 @@
 
         <tbody ng-model="data.buildings" ui-sortable>
         <tr class="building-line" ng-repeat="building in data.buildings">
+            <td class="building-score-box"
+                ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]">
+                <span>{{ formatScore(computeTotalScore(building.id)) }}</span>
+            </td>
+
             <td class="clickable building-box"
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
                 ng-click="sortSlavesByBuilding(building.id)">
                 <div>
                     {{building.name}}
-                    <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)">
-                        <span ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
-                    </span>
+                        <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)">
+                            <span ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
+                        </span>
                 </div>
                 <div class="activity-label" ui-if='building.activity.name != ""'>{{building.activity.name}}</div>
             </td>
+
             <td class="clickable value-box"
                 ng-repeat="slave in data.slaves"
                 ng-class="{'occupying': 'building-occupying', 'full': 'building-full', 'free': 'building-can-occupy'}[getSlaveBuildingStatus(slave.id, building.id)]"
                 ng-click="reassign(slave.id, building.id)">
-                <span>{{ computeScore(slave.comps, building.activity.comps) }}</span>
+                <span>{{ formatScore(computeScore(slave.comps, building.activity.comps)) }}</span>
             </td>
         </tr>
         </tbody>

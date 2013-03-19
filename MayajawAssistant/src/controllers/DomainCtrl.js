@@ -9,7 +9,28 @@ function DomainCtrl($scope, sharedDataService) {
                 + slaveComp.INT * activityComp.INT
                 + slaveComp.PER * activityComp.PER
                 + slaveComp.CHA * activityComp.CHA
-        ) * 5;
+        )*5;
+    }
+
+    $scope.formatScore = function (score) {
+        if (score == 0) {
+            return "-";
+        }
+        return score;
+    }
+
+    $scope.computeTotalScore = function(buildingId) {
+        var building = getBuilding(buildingId);
+        var totalScore = 0;
+        var assignments = $scope.data.assignments;
+        for (var key in assignments) {
+            if (assignments.hasOwnProperty(key)) {
+                if (assignments[key] === buildingId) {
+                    totalScore += $scope.computeScore(getSlave(key).comps, building.activity.comps);
+                }
+            }
+        }
+        return totalScore;
     }
 
     // Sort the slaves list from the stronger to weaker for this building.
@@ -18,8 +39,23 @@ function DomainCtrl($scope, sharedDataService) {
 
         var activityComp = building.activity.comps;
 
+        // We add some pre-sort index to all slaves in order to implement a stable sorting.
+        // Array sorting is unstable in some browsers, and this creates unfriendly behavior
+        // when clicking many times on a building
+        for (var i = 0 ; i < $scope.data.slaves.length ; i++) {
+            $scope.data.slaves[i].preSortIndex = i;
+        }
+
         $scope.data.slaves.sort(function (a, b) {
-            return $scope.computeScore(b.comps, activityComp) - $scope.computeScore(a.comps, activityComp);
+            var scoreA = $scope.computeScore(a.comps, activityComp);
+            var scoreB = $scope.computeScore(b.comps, activityComp);
+
+            if (scoreA == scoreB) {
+                // We sort by order if scores are the same to enforce stable sorting.
+                return a.preSortIndex - b.preSortIndex;
+            } else {
+                return scoreB - scoreA;
+            }
         });
     }
 
@@ -27,6 +63,16 @@ function DomainCtrl($scope, sharedDataService) {
         for (var i = 0; i < $scope.data.buildings.length; i++) {
             if ($scope.data.buildings[i].id === id) {
                 return $scope.data.buildings[i];
+            }
+        }
+
+        return null;
+    }
+
+    function getSlave(id) {
+        for (var i = 0; i < $scope.data.slaves.length; i++) {
+            if ($scope.data.slaves[i].id == id) {
+                return $scope.data.slaves[i];
             }
         }
 

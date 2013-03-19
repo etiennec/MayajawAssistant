@@ -15,6 +15,18 @@ ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]
 ParseUtils.buildingNameMatcher = /<b>([^<]*?)(<b>&ndash;<\/b>)?<\/b>(<i>.+<\/i><b><\/b>)?( : (.*))?<div class='rapports'>/;
 ParseUtils.domainSlaveMatcher = /m\('<img width=55 height=68  style=\\'float:left\\' src=\\'i\/avatars[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?<\/div><b>(.*?)<\/b>[^\)]*\)/g;
 
+ParseUtils.buildingActivityMatcher = /<div onmouseover='m\("<img src=i\/struct\/info1.png>","Cette barre indique les caractéristiques prises en compte(.*)?<div id='gomarche/;
+ParseUtils.buildingActivityDetailMatcher = /width:(\d+)px;height:8px;background-color:#(......);/g;
+
+ParseUtils.colorToCompMap = {
+    'FFD78A' : 'FOR',
+    'F6F289': 'DEX',
+    'EC8B8B': 'END',
+    'C0D1EC': 'INT',
+    'B3F1B2': 'PER',
+    'E8CFE8': 'CHA'
+}
+
 // Parse a line into a header line, i.e. year/month line.
 // Returns a new MonthlyOfferings if parsed successfully, null else.
 ParseUtils.parseHeaderOfferingLine = function (line) {
@@ -214,15 +226,48 @@ ParseUtils.parseBuildingInfo = function (domainItemStr) {
         building.name = name.trim().replace('&rsquo;', "'");
         building.level = level === 0 ? 1 : level;
 
+        var activity = new Activity();
+
         if (nameMatch[5] !== undefined) {
-            var activity = new Activity(nameMatch[5]);
-            // TODO comp
-            building.activity = activity;
+            activity.name = nameMatch[5];
         }
 
+        activity.comps = ParseUtils.parseBuildingActivity(domainItemStr);
+        building.activity = activity;
     }
 
     return building;
+}
+
+ParseUtils.parseBuildingActivity = function(domainItemStr) {
+
+    var comps = new Competences();
+    var compSum = 0;
+    var activityDetailMatch;
+    var nameMatch = ParseUtils.buildingActivityMatcher.exec(domainItemStr);
+
+    if (nameMatch == null) {
+        return comps;
+    }
+
+    while (activityDetailMatch = ParseUtils.buildingActivityDetailMatcher.exec(nameMatch[1])) {
+        var score = parseInt(activityDetailMatch[1]) + 2;
+        var color = activityDetailMatch[2];
+
+        comps[ParseUtils.colorToCompMap[color]] = score;
+        compSum += score;
+    }
+
+    // We need to normalize all comps so that their total is 1.
+    comps.FOR /= compSum;
+    comps.DEX /= compSum;
+    comps.END /= compSum;
+    comps.INT /= compSum;
+    comps.PER /= compSum;
+    comps.CHA /= compSum;
+
+    return comps;
+
 }
 
 

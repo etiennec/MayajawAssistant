@@ -81,7 +81,6 @@ a.input-button {
 }
 
 .analysis-main-content table {
-    table-layout: fixed;
     overflow-x: auto;
 }
 
@@ -177,7 +176,6 @@ div.entry-input-zone {
 }
 
 .building-can-occupy {
-
 }
 
 .slave-busy {
@@ -196,9 +194,12 @@ div.entry-input-zone {
     color: #9a9a9a;
 }
 
+.slave-box {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 .slave-box, .value-box {
-    width: 100px !important;
-    table-layout: fixed;
     white-space: nowrap;
 }
 
@@ -207,8 +208,10 @@ div.entry-input-zone {
 }
 
 .building-box {
-    width: 250px !important;
-    table-layout: fixed;
+    white-space: nowrap;
+}
+
+.building-score-box {
     white-space: nowrap;
 }
 
@@ -216,15 +219,9 @@ div.entry-input-zone {
     background-color: #f5f5dc;
 }
 
+/*
 .ui-scrollfix {
     position: fixed;
     top: 0px;
 }
-
-table tr td {
-    width: 100px !important;
-}
-
-table tr td:first-child {
-    width: 250px !important;
-}
+*/
