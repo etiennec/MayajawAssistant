@@ -66,16 +66,18 @@
 
         <div ui-if="requiredMoves.length == 0">Aucun Mouvement nécessaire.</div>
 
-         <table>
-             <tr ng-repeat="move in requiredMoves" class="domain-migration-item" ng-class="{true: 'slave-to-monolith', false: ''}[move.to == null]">
-                 <td>{{move.who}}</td>
-                 <td>:</td>
-                 <td>{{move.from}}</td>
-                 <td>&#8594;</td>
-                 <td>{{{true: "Monolithe", false: move.to}[move.to == null]}}</td>
-             </tr>
-         </table>
+        <table>
+            <tr ng-repeat="move in requiredMoves" class="domain-migration-item"
+                ng-class="{'move-completed': move.checked,  'slave-to-monolith': move.to == null}">
+                <td><input type="checkbox" ng-model="move.checked"/></td>
+                <td>{{move.who}}</td>
+                <td>:</td>
+                <td>{{move.from}}</td>
+                <td>&#8594;</td>
+                <td>{{{true: "Monolithe", false: move.to}[move.to == null]}}</td>
+            </tr>
+        </table>
 
-     </div>
+    </div>
 
 </div>

@@ -205,8 +205,7 @@ div.entry-input-zone {
 
 .value-box {
     text-align: center;
- }
-
+}
 
 .building-box {
     white-space: nowrap;
@@ -228,6 +227,12 @@ tr.domain-migration-item td {
     color: red;
 }
 
+.move-completed {
+    text-decoration: line-through;
+    color:#808080;
+    font-style: italic;
+
+}
 
 /*
 .ui-scrollfix {

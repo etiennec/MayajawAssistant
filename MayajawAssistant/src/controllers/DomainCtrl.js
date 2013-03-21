@@ -8,7 +8,7 @@ function DomainCtrl($scope, sharedDataService) {
     }
 
     $scope.computeScore = function (slaveComp, activityComp) {
-        return Math.round(
+        return Math.floor(
             slaveComp.FOR * activityComp.FOR
                 + slaveComp.DEX * activityComp.DEX
                 + slaveComp.END * activityComp.END
@@ -154,7 +154,8 @@ function DomainCtrl($scope, sharedDataService) {
                     moves.push({
                         who: getSlave(slaveId).name,
                         from: getBuilding(fromId).name,
-                        to: toId == null ? null : getBuilding(toId).name
+                        to: toId == null ? null : getBuilding(toId).name,
+                        checked: false
                     });
                 }
             }
