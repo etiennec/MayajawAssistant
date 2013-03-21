@@ -4,6 +4,8 @@
     <span class="btn" id="init-domain" ng-click="initDomain()">Annuler les modifications</span>
     &nbsp;
     <span class="btn" id="unassign-everyone" ng-click="removeAllAssignments()">Désaffecter tous les esclaves</span>
+    &nbsp;
+    <span class="btn" id="auto-assign-everyone" ng-click="autoAssign()">Assignation automatique</span>
 </div>
 
 <div class="analysis-main-content">
@@ -15,7 +17,7 @@
         </colgroup>
         <thead>
         <tr>
-            <th class="building-score-box">&nbsp;</th>
+            <th class="building-score-box" title="Score Total pour l'ensemble du domaine" ui-jq="tooltip">{{ formatScore(computeDomainTotalScore()) }}</th>
             <th class="building-box">&nbsp;</th>
             <th class="clickable slave-box"
                 ng-repeat="slave in data.slaves"
@@ -32,12 +34,12 @@
             <td class="building-score-box"
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
                 title="Score Total pour le bâtiment {{building.name}}" ui-jq="tooltip">
-                <span>{{ formatScore(computeTotalScore(building.id)) }}</span>
+                <span>{{ formatScore(computeBuildingTotalScore(building.id)) }}</span>
             </td>
 
             <td class="clickable building-box"
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
-                ng-click="sortSlavesByBuilding(building.id)"
+                ng-click="sortSlavesByActivityComp(building.activity.comps)"
                 title="Cliquez ici pour classer les esclaves en fonction de leur score dans ce bâtiment.<br><br>Vous pouvez réorganiser les bâtiments avec un drag'n'drop."
                 ui-jq="tooltip">
                 <div>
@@ -53,8 +55,9 @@
                 ng-repeat="slave in data.slaves"
                 ng-class="{'occupying': 'building-occupying', 'full': 'building-full', 'free': 'building-can-occupy'}[getSlaveBuildingStatus(slave.id, building.id)]"
                 ng-click="reassign(slave.id, building.id)"
-                title="{{slave.name}}<br>({{building.name}})" ui-jq="tooltip" ui-options="{placement:'top'}">
-                <span>{{ formatScore(computeScore(slave.comps, building.activity.comps)) }}</span>
+                data-original-title="{{getValueBoxTooltip(slave.id, building.id)}}"
+                ui-jq="tooltip" ui-options="{placement:'top'}">
+                {{ formatScore(computeScore(slave.comps, building.activity.comps)) }}
             </td>
         </tr>
         </tbody>

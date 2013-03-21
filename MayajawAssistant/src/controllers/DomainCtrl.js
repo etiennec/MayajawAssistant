@@ -25,7 +25,7 @@ function DomainCtrl($scope, sharedDataService) {
         return score;
     }
 
-    $scope.computeTotalScore = function (buildingId) {
+    $scope.computeBuildingTotalScore = function (buildingId) {
         var building = getBuilding(buildingId);
         var totalScore = 0;
         var assignments = $scope.data.assignments;
@@ -39,11 +39,18 @@ function DomainCtrl($scope, sharedDataService) {
         return totalScore;
     }
 
-    // Sort the slaves list from the stronger to weaker for this building.
-    $scope.sortSlavesByBuilding = function (id) {
-        var building = getBuilding(id);
+    $scope.computeDomainTotalScore = function () {
+        var totalDomainScore = 0;
+        for (var i = 0; i < $scope.data.buildings.length ; i++) {
+            totalDomainScore += $scope.computeBuildingTotalScore($scope.data.buildings[i].id);
+        }
 
-        var activityComp = building.activity.comps;
+        return totalDomainScore;
+    }
+
+    // Sort the slaves list from the stronger to weaker for this building.
+    // TODO add extra comps to add extra search criterias in case of equality.
+    $scope.sortSlavesByActivityComp = function (activityComps) {
 
         // We add some pre-sort index to all slaves in order to implement a stable sorting.
         // Array sorting is unstable in some browsers, and this creates unfriendly behavior
@@ -53,8 +60,8 @@ function DomainCtrl($scope, sharedDataService) {
         }
 
         $scope.data.slaves.sort(function (a, b) {
-            var scoreA = $scope.computeScore(a.comps, activityComp);
-            var scoreB = $scope.computeScore(b.comps, activityComp);
+            var scoreA = $scope.computeScore(a.comps, activityComps);
+            var scoreB = $scope.computeScore(b.comps, activityComps);
 
             if (scoreA == scoreB) {
                 // We sort by order if scores are the same to enforce stable sorting.
@@ -83,6 +90,24 @@ function DomainCtrl($scope, sharedDataService) {
         }
 
         return null;
+    }
+
+    $scope.getValueBoxTooltip = function (slaveId, targetBuildingId) {
+
+        var slave = getSlave(slaveId);
+        var targetBuilding = getBuilding(targetBuildingId);
+        var currentBuildingId = $scope.data.assignments[slaveId];
+        if (currentBuildingId == null) {
+            // This slave is currently free
+            return "Déplacer<br>" + slave.name + "<br>vers<br>" + targetBuilding.name + "<br><i>(Actuellement Libre)</i>";
+        } else if (currentBuildingId == targetBuildingId) {
+            // Slave already in this building
+            return "Enlever<br>" + slave.name + "<br>de<br>" + targetBuilding.name + "<br><i>(Il y est actuellement assigné)</i>";
+        } else {
+            // Slave is busy in another building
+            return "Déplacer<br>" + slave.name + "<br>vers<br>" + targetBuilding.name + "<br><i>(Actuellement dans " + getBuilding(currentBuildingId).name + ")</i>";
+        }
+
     }
 
     $scope.isBuildingFull = function (buildingId) {
@@ -135,6 +160,7 @@ function DomainCtrl($scope, sharedDataService) {
     }
 
     $scope.removeAllAssignments = function () {
+        // TODO handle locks
         for (var slaveId in $scope.data.assignments) {
             if ($scope.data.assignments.hasOwnProperty(slaveId)) {
                 $scope.data.assignments[slaveId] = null;
@@ -164,10 +190,69 @@ function DomainCtrl($scope, sharedDataService) {
         return moves;
     }
 
+    $scope.autoAssign = function () {
+        // First, we clean all assignments, except when buildings or slaves are locked.
+        $scope.removeAllAssignments();
+
+        // Then, we loop through each unlock building in the order and assign the best available slave, until there's no more room or no more slave.
+        var allBuildingsFull = false;
+        var allSlavesTaken = false;
+        while (!allBuildingsFull && !allSlavesTaken) {
+            allBuildingsFull = true;
+
+            for (var i = 0; i < $scope.data.buildings.length; i++) {
+
+                var building = $scope.data.buildings[i];
+                // TODO handle locked buildings
+
+                // We find the best Slave for the job
+                var slave = getBestAvailableSlaveForActivity(building.activity.comps)
+
+                if (slave == null) {
+                    // No more available slave !
+                    allSlavesTaken = true;
+                    break;
+                }
+
+                if ($scope.computeScore(slave.comps, building.activity.comps) === 0) {
+                    // We ignore buildings for which the best slave score is zero.
+                    continue;
+                }
+
+                $scope.reassign(slave.id, building.id);
+
+                if (!$scope.isBuildingFull(building.id)) {
+                    allBuildingsFull = false;
+                }
+            }
+        }
+
+        // Finished !
+        return;
+
+        function getBestAvailableSlaveForActivity(comps) {
+
+            $scope.sortSlavesByActivityComp(comps);
+
+            for (var i = 0; i < $scope.data.slaves.length; i++) {
+                var slaveId = $scope.data.slaves[i].id;
+                // Is slave free?
+                if ($scope.data.assignments[slaveId] == null) {
+                    // TODO handle locked slaves
+                    return getSlave(slaveId);
+                }
+            }
+
+            // No free slave found.
+            return null;
+        }
+    }
+
+
     $scope.$watch('data.assignments', function () {
         $scope.requiredMoves = getRequiredMoves();
     }, true);
 
-    // Initialization of controller
+// Initialization of controller
     $scope.initDomain();
 }
