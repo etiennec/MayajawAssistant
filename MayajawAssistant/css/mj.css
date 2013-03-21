@@ -103,9 +103,8 @@ textarea.input-text {
     background-color: LightBlue;
 }
 
-.entry-input-zone {
+.entry-input-zone, .domain-migration-list {
     float: left;
-    width: 27%;
     margin: 20px;
     padding: 30px;
 }
@@ -119,6 +118,7 @@ textarea.input-text {
 
 div.entry-input-zone {
     border-radius: 25px;
+    width: 27%;
 }
 
 .input-title {
@@ -205,7 +205,8 @@ div.entry-input-zone {
 
 .value-box {
     text-align: center;
-}
+ }
+
 
 .building-box {
     white-space: nowrap;
@@ -218,6 +219,15 @@ div.entry-input-zone {
 .building-line:hover {
     background-color: #f5f5dc;
 }
+
+tr.domain-migration-item td {
+    padding-left: 20px;
+}
+
+.slave-to-monolith {
+    color: red;
+}
+
 
 /*
 .ui-scrollfix {

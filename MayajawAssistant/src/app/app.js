@@ -7,7 +7,7 @@ angular.module('mjassistant', ['ui']).
             when('/domain', {templateUrl: 'src/templates/domainOrganization.html', controller: DomainCtrl}).
             otherwise({redirectTo: '/home'});
     }])
-    .service('sharedDataService', function () {
+    .service('sharedDataService',function () {
 
         var cenoteData = {};
         var marketData = {};
@@ -33,4 +33,14 @@ angular.module('mjassistant', ['ui']).
                 domainData = value;
             }
         };
+    }).value('ui.config', {
+        // The ui-jq directive namespace
+        jq: {
+            tooltip: {
+                placement: 'right',
+                html: true,
+                animation: false,
+                trigger: 'hover'
+            }
+        }
     });

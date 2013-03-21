@@ -1,6 +1,11 @@
 <div class="back-link">
     <a href="#" class="btn" id="back-to-entry-input-from-domain">&lt;&lt; Retour</a>
+    &nbsp;
+    <span class="btn" id="init-domain" ng-click="initDomain()">Annuler les modifications</span>
+    &nbsp;
+    <span class="btn" id="unassign-everyone" ng-click="removeAllAssignments()">Désaffecter tous les esclaves</span>
 </div>
+
 <div class="analysis-main-content">
     <table>
         <colgroup>
@@ -10,13 +15,14 @@
         </colgroup>
         <thead>
         <tr>
-            <th class="building-score-box">Total</th>
+            <th class="building-score-box">&nbsp;</th>
             <th class="building-box">&nbsp;</th>
             <th class="clickable slave-box"
                 ng-repeat="slave in data.slaves"
                 ng-class="{true: 'slave-free', false: 'slave-busy'}[(data.assignments[slave.id]==null)]"
-                ng-click="reassign(slave.id, null)">
-                <span>{{slave.name}}</span>
+                ng-click="reassign(slave.id, null)"
+                title="{{slave.name}}" ui-jq="tooltip">
+                <span>&nbsp;</span>
             </th>
         </tr>
         </thead>
@@ -24,13 +30,16 @@
         <tbody ng-model="data.buildings" ui-sortable>
         <tr class="building-line" ng-repeat="building in data.buildings">
             <td class="building-score-box"
-                ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]">
+                ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
+                title="Score Total pour le bâtiment {{building.name}}" ui-jq="tooltip">
                 <span>{{ formatScore(computeTotalScore(building.id)) }}</span>
             </td>
 
             <td class="clickable building-box"
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
-                ng-click="sortSlavesByBuilding(building.id)">
+                ng-click="sortSlavesByBuilding(building.id)"
+                title="Cliquez ici pour classer les esclaves en fonction de leur score dans ce bâtiment.<br><br>Vous pouvez réorganiser les bâtiments avec un drag'n'drop."
+                ui-jq="tooltip">
                 <div>
                     {{building.name}}
                         <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)">
@@ -43,11 +52,30 @@
             <td class="clickable value-box"
                 ng-repeat="slave in data.slaves"
                 ng-class="{'occupying': 'building-occupying', 'full': 'building-full', 'free': 'building-can-occupy'}[getSlaveBuildingStatus(slave.id, building.id)]"
-                ng-click="reassign(slave.id, building.id)">
+                ng-click="reassign(slave.id, building.id)"
+                title="{{slave.name}}<br>({{building.name}})" ui-jq="tooltip" ui-options="{placement:'top'}">
                 <span>{{ formatScore(computeScore(slave.comps, building.activity.comps)) }}</span>
             </td>
         </tr>
         </tbody>
 
     </table>
+
+    <div class="domain-migration-list bordered">
+        <div class="input-title">Mouvements à effectuer sur votre domaine:</div>
+
+        <div ui-if="requiredMoves.length == 0">Aucun Mouvement nécessaire.</div>
+
+         <table>
+             <tr ng-repeat="move in requiredMoves" class="domain-migration-item" ng-class="{true: 'slave-to-monolith', false: ''}[move.to == null]">
+                 <td>{{move.who}}</td>
+                 <td>:</td>
+                 <td>{{move.from}}</td>
+                 <td>&#8594;</td>
+                 <td>{{{true: "Monolithe", false: move.to}[move.to == null]}}</td>
+             </tr>
+         </table>
+
+     </div>
+
 </div>

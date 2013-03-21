@@ -1,5 +1,11 @@
 function DomainCtrl($scope, sharedDataService) {
-    $scope.data = sharedDataService.getDomainData();
+
+    $scope.initDomain = function () {
+        // We need to make a deep copy of the object so that domain data from service don't get modified.
+        $scope.data = jQuery.extend(true, {}, sharedDataService.getDomainData());
+        $scope.originalAssignments = jQuery.extend(true, {}, $scope.data.assignments);
+        $scope.requiredMoves = [];
+    }
 
     $scope.computeScore = function (slaveComp, activityComp) {
         return Math.round(
@@ -9,7 +15,7 @@ function DomainCtrl($scope, sharedDataService) {
                 + slaveComp.INT * activityComp.INT
                 + slaveComp.PER * activityComp.PER
                 + slaveComp.CHA * activityComp.CHA
-        )*5;
+        ) * 5;
     }
 
     $scope.formatScore = function (score) {
@@ -19,7 +25,7 @@ function DomainCtrl($scope, sharedDataService) {
         return score;
     }
 
-    $scope.computeTotalScore = function(buildingId) {
+    $scope.computeTotalScore = function (buildingId) {
         var building = getBuilding(buildingId);
         var totalScore = 0;
         var assignments = $scope.data.assignments;
@@ -42,7 +48,7 @@ function DomainCtrl($scope, sharedDataService) {
         // We add some pre-sort index to all slaves in order to implement a stable sorting.
         // Array sorting is unstable in some browsers, and this creates unfriendly behavior
         // when clicking many times on a building
-        for (var i = 0 ; i < $scope.data.slaves.length ; i++) {
+        for (var i = 0; i < $scope.data.slaves.length; i++) {
             $scope.data.slaves[i].preSortIndex = i;
         }
 
@@ -79,7 +85,7 @@ function DomainCtrl($scope, sharedDataService) {
         return null;
     }
 
-    $scope.isBuildingFull = function(buildingId) {
+    $scope.isBuildingFull = function (buildingId) {
         var building = getBuilding(buildingId);
 
         var occupancy = building.getOccupancyArray($scope.data.assignments);
@@ -127,4 +133,40 @@ function DomainCtrl($scope, sharedDataService) {
             $scope.data.assignments[slaveId] = buildingId;
         }
     }
+
+    $scope.removeAllAssignments = function () {
+        for (var slaveId in $scope.data.assignments) {
+            if ($scope.data.assignments.hasOwnProperty(slaveId)) {
+                $scope.data.assignments[slaveId] = null;
+            }
+        }
+    }
+
+    function getRequiredMoves() {
+
+        var moves = [];
+
+        for (var slaveId in $scope.originalAssignments) {
+            if ($scope.originalAssignments.hasOwnProperty(slaveId)) {
+                var fromId = $scope.originalAssignments[slaveId];
+                var toId = $scope.data.assignments[slaveId];
+                if (fromId != toId) {
+                    moves.push({
+                        who: getSlave(slaveId).name,
+                        from: getBuilding(fromId).name,
+                        to: toId == null ? null : getBuilding(toId).name
+                    });
+                }
+            }
+        }
+
+        return moves;
+    }
+
+    $scope.$watch('data.assignments', function () {
+        $scope.requiredMoves = getRequiredMoves();
+    }, true);
+
+    // Initialization of controller
+    $scope.initDomain();
 }
