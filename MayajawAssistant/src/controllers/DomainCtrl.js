@@ -3,8 +3,32 @@ function DomainCtrl($scope, sharedDataService) {
     $scope.initDomain = function () {
         // We need to make a deep copy of the object so that domain data from service don't get modified.
         $scope.data = jQuery.extend(true, {}, sharedDataService.getDomainData());
-        $scope.originalAssignments = jQuery.extend(true, {}, $scope.data.assignments);
         $scope.requiredMoves = [];
+        $scope.lockedBuildings = {};
+        $scope.lockedSlaves = {};
+
+        // We remove all buildings that have no activity comp score, and set their slaves as not assigned.
+        var comps = new Competences(20, 20, 20, 20, 20, 20);
+        for (var i = 0; i < $scope.data.buildings.length; i++) {
+            var building = $scope.data.buildings[i];
+            // We initialize building lock status
+            $scope.lockedBuildings[building.id] = false;
+            if ($scope.computeScore(comps, building.activity.comps) == 0) {
+                $scope.deleteBuilding(building.id);
+                i--;
+            }
+        }
+
+        // We initialize slaves locks statuses
+        for (var i = 0; i < $scope.data.slaves.length; i++) {
+            var slave = $scope.data.slaves[i];
+            $scope.lockedSlaves[slave.id] = false;
+        }
+
+        // TODO handle locks based on slaves and buildings names prefixes.
+
+        $scope.originalAssignments = jQuery.extend(true, {}, $scope.data.assignments);
+
     }
 
     $scope.computeScore = function (slaveComp, activityComp) {
@@ -41,7 +65,7 @@ function DomainCtrl($scope, sharedDataService) {
 
     $scope.computeDomainTotalScore = function () {
         var totalDomainScore = 0;
-        for (var i = 0; i < $scope.data.buildings.length ; i++) {
+        for (var i = 0; i < $scope.data.buildings.length; i++) {
             totalDomainScore += $scope.computeBuildingTotalScore($scope.data.buildings[i].id);
         }
 
@@ -73,6 +97,11 @@ function DomainCtrl($scope, sharedDataService) {
     }
 
     function getBuilding(id) {
+
+        if (id == null) {
+            return null;
+        }
+
         for (var i = 0; i < $scope.data.buildings.length; i++) {
             if ($scope.data.buildings[i].id === id) {
                 return $scope.data.buildings[i];
@@ -97,21 +126,70 @@ function DomainCtrl($scope, sharedDataService) {
         var slave = getSlave(slaveId);
         var targetBuilding = getBuilding(targetBuildingId);
         var currentBuildingId = $scope.data.assignments[slaveId];
+
+        var originBuildingLocked = currentBuildingId == null ? false : $scope.lockedBuildings[currentBuildingId];
+        var destinationBuildingLocked = $scope.lockedBuildings[targetBuildingId];
+        var slaveLocked = $scope.lockedSlaves[slaveId];
+        var buildingFull = $scope.isBuildingFull(targetBuildingId);
+
+        var cannotMoveSlave = originBuildingLocked || destinationBuildingLocked || slaveLocked || (buildingFull && currentBuildingId != targetBuildingId);
+
+        var possibleOrNotStr = cannotMoveSlave ? "<span class='error'>Impossible</span> de " : "";
+        var moveTypeStr = "Déplacer ";
+        var directionWordStr = "vers ";
+
+        var notPossibleReason = "";
+
+        var currentPositionStr = null;
+
+        if (currentBuildingId == targetBuildingId) {
+            // Slave already in this building
+            moveTypeStr = "Enlever ";
+            directionWordStr = "de ";
+            currentPositionStr = "(Il y est actuellement assigné)";
+            if (cannotMoveSlave) {
+                possibleOrNotStr = "<span class='error'>Impossible</span> d'"
+            }
+            if (originBuildingLocked && destinationBuildingLocked) {
+                // We need only one error message about the locked building, not two.
+                destinationBuildingLocked = false;
+            }
+        }
         if (currentBuildingId == null) {
             // This slave is currently free
-            return "Déplacer<br>" + slave.name + "<br>vers<br>" + targetBuilding.name + "<br><i>(Actuellement Libre)</i>";
-        } else if (currentBuildingId == targetBuildingId) {
-            // Slave already in this building
-            return "Enlever<br>" + slave.name + "<br>de<br>" + targetBuilding.name + "<br><i>(Il y est actuellement assigné)</i>";
+            currentPositionStr = "(Actuellement Libre)";
         } else {
             // Slave is busy in another building
-            return "Déplacer<br>" + slave.name + "<br>vers<br>" + targetBuilding.name + "<br><i>(Actuellement dans " + getBuilding(currentBuildingId).name + ")</i>";
+            currentPositionStr = "(Actuellement dans " + getBuilding(currentBuildingId).name + ")";
         }
+
+        if (cannotMoveSlave) {
+            if (originBuildingLocked) {
+                notPossibleReason += "<span class='error'>Le bâtiment où se trouve l'esclave (" + getBuilding(currentBuildingId).name + ") est vérouillé</span><br>";
+            }
+            if (destinationBuildingLocked) {
+                notPossibleReason += "<span class='error'>Le bâtiment de destination (" + targetBuilding.name + ") est vérouillé</span><br>";
+            }
+            if (slaveLocked) {
+                notPossibleReason += "<span class='error'>L'esclave est vérouillé</span><br>";
+            }
+            if (buildingFull) {
+                notPossibleReason += "<span class='error'>Le bâtiment est plein</span><br>";
+            }
+        }
+
+        return possibleOrNotStr + moveTypeStr + "<br><b>" + slave.name + "</b><br>" + directionWordStr + "<br><b>"
+            + targetBuilding.name + "</b><br>" + notPossibleReason + "<i>" + currentPositionStr + "</i>";
 
     }
 
     $scope.isBuildingFull = function (buildingId) {
         var building = getBuilding(buildingId);
+
+        if (building == null) {
+            console.log("Couldn't retrieve building with ID " + buildingId + " to check if it is full.");
+            return false;
+        }
 
         var occupancy = building.getOccupancyArray($scope.data.assignments);
 
@@ -160,9 +238,19 @@ function DomainCtrl($scope, sharedDataService) {
     }
 
     $scope.removeAllAssignments = function () {
-        // TODO handle locks
         for (var slaveId in $scope.data.assignments) {
             if ($scope.data.assignments.hasOwnProperty(slaveId)) {
+                // Skipping locked slaves
+                var slave = getSlave(slaveId);
+                if ($scope.lockedSlaves[slaveId]) {
+                    continue;
+                }
+                // skipping locked buildings
+                var buildingId = $scope.data.assignments[slaveId];
+                if (buildingId != null && $scope.lockedBuildings[buildingId]) {
+                    continue;
+                }
+
                 $scope.data.assignments[slaveId] = null;
             }
         }
@@ -174,13 +262,21 @@ function DomainCtrl($scope, sharedDataService) {
 
         for (var slaveId in $scope.originalAssignments) {
             if ($scope.originalAssignments.hasOwnProperty(slaveId)) {
+
+                if (getSlave(slaveId) == null) {
+                    // We don't include this slave if it has been deleted.
+                    continue;
+                }
+
                 var fromId = $scope.originalAssignments[slaveId];
                 var toId = $scope.data.assignments[slaveId];
                 if (fromId != toId) {
                     moves.push({
                         who: getSlave(slaveId).name,
-                        from: getBuilding(fromId).name,
-                        to: toId == null ? null : getBuilding(toId).name,
+                        from: fromId == null ? null :
+                            (getBuilding(fromId) == null ? null : getBuilding(fromId).name),
+                        to: toId == null ? null :
+                            (getBuilding(toId) == null ? null : getBuilding(toId).name),
                         checked: false
                     });
                 }
@@ -190,20 +286,73 @@ function DomainCtrl($scope, sharedDataService) {
         return moves;
     }
 
+    $scope.deleteBuilding = function (buildingId) {
+        // First we de-assign any slave in this building
+        for (var key in $scope.data.assignments) {
+            if ($scope.data.assignments.hasOwnProperty(key)) {
+                if ($scope.data.assignments[key] === buildingId) {
+                    $scope.data.assignments[key] = null;
+                }
+            }
+        }
+
+        // Then we remove the building from the list.
+        for (var i = 0; i < $scope.data.buildings.length; i++) {
+            if ($scope.data.buildings[i].id == buildingId) {
+                $scope.data.buildings.splice(i, 1);
+                // There can be only one.
+                break;
+            }
+        }
+    }
+
+    $scope.deleteSlave = function (slaveId) {
+        // First we delete this slave from the assignments
+        delete $scope.data.assignments[slaveId];
+
+        // Then we delete it from the list of slaves.
+        for (var i = 0; i < $scope.data.slaves.length; i++) {
+            if ($scope.data.slaves[i].id == slaveId) {
+                $scope.data.slaves.splice(i, 1);
+                // There can be only one.
+                break;
+            }
+        }
+    }
+
+    $scope.toggleSlaveLock = function (slaveId) {
+        $scope.lockedSlaves[slaveId] = !$scope.lockedSlaves[slaveId];
+    }
+
+    $scope.toggleBuildingLock = function (buildingId) {
+        $scope.lockedBuildings[buildingId] = !$scope.lockedBuildings[buildingId];
+    }
+
+
     $scope.autoAssign = function () {
         // First, we clean all assignments, except when buildings or slaves are locked.
         $scope.removeAllAssignments();
+
+        // We need to save pre-autoAssign order in order to restore it after autoAssign finishes.
+        for (var i = 0; i < $scope.data.slaves.length; i++) {
+            $scope.data.slaves[i].preAutoAssignIndex = i;
+        }
 
         // Then, we loop through each unlock building in the order and assign the best available slave, until there's no more room or no more slave.
         var allBuildingsFull = false;
         var allSlavesTaken = false;
         while (!allBuildingsFull && !allSlavesTaken) {
+
             allBuildingsFull = true;
 
             for (var i = 0; i < $scope.data.buildings.length; i++) {
 
                 var building = $scope.data.buildings[i];
-                // TODO handle locked buildings
+
+                if ($scope.lockedBuildings[building.id]) {
+                    // We don't mess with locked buildings.
+                    continue;
+                }
 
                 // We find the best Slave for the job
                 var slave = getBestAvailableSlaveForActivity(building.activity.comps)
@@ -227,19 +376,29 @@ function DomainCtrl($scope, sharedDataService) {
             }
         }
 
+
+        // We finally restore the order of the slaves to what it was before autoAssign.
+        $scope.data.slaves.sort(function (a, b) {
+                return a.preAutoAssignIndex - b.preAutoAssignIndex;
+        });
+
         // Finished !
         return;
 
         function getBestAvailableSlaveForActivity(comps) {
 
+            // First, we sort from best to worst
             $scope.sortSlavesByActivityComp(comps);
 
+            // Then we pick the best guy for the job.
             for (var i = 0; i < $scope.data.slaves.length; i++) {
                 var slaveId = $scope.data.slaves[i].id;
                 // Is slave free?
                 if ($scope.data.assignments[slaveId] == null) {
-                    // TODO handle locked slaves
-                    return getSlave(slaveId);
+                    var slave = getSlave(slaveId)
+                    if (!$scope.lockedSlaves[slaveId]) {
+                        return slave;
+                    }
                 }
             }
 
@@ -253,6 +412,6 @@ function DomainCtrl($scope, sharedDataService) {
         $scope.requiredMoves = getRequiredMoves();
     }, true);
 
-// Initialization of controller
+    // Initialization of controller
     $scope.initDomain();
 }

@@ -1,11 +1,11 @@
-<div class="back-link">
+<div class="back-link bordered domain-top-buttons" >
     <a href="#" class="btn" id="back-to-entry-input-from-domain">&lt;&lt; Retour</a>
     &nbsp;
     <span class="btn" id="init-domain" ng-click="initDomain()">Annuler les modifications</span>
     &nbsp;
     <span class="btn" id="unassign-everyone" ng-click="removeAllAssignments()">Désaffecter tous les esclaves</span>
     &nbsp;
-    <span class="btn" id="auto-assign-everyone" ng-click="autoAssign()">Assignation automatique</span>
+    <span class="btn" id="auto-assign-everyone" ng-click="autoAssign()">Assignation automatique (beta)</span>
 </div>
 
 <div class="analysis-main-content">
@@ -17,43 +17,64 @@
         </colgroup>
         <thead>
         <tr>
-            <th class="building-score-box" title="Score Total pour l'ensemble du domaine" ui-jq="tooltip">{{ formatScore(computeDomainTotalScore()) }}</th>
+            <th class="building-score-box" data-original-title="Score Total pour l'ensemble du domaine" ui-jq="tooltip">
+                {{
+                formatScore(computeDomainTotalScore()) }}
+            </th>
             <th class="building-box">&nbsp;</th>
-            <th class="clickable slave-box"
+            <!-- Slave info box. Only appears when Hovered -->
+            <th class="slave-box hoverable-content"
                 ng-repeat="slave in data.slaves"
                 ng-class="{true: 'slave-free', false: 'slave-busy'}[(data.assignments[slave.id]==null)]"
-                ng-click="reassign(slave.id, null)"
-                title="{{slave.name}}" ui-jq="tooltip">
-                <span>&nbsp;</span>
+                title="{{slave.comps.toString()}}">
+                <span class="hover-only-content">
+                    <img class="clickable" src="images/delete.png"
+                         ng-click="deleteSlave(slave.id)">&nbsp;{{slave.name}}&nbsp;
+                    <img class="clickable" src="images/lock.png" ng-click="toggleSlaveLock(slave.id)"
+                         ui-if="!lockedSlaves[slave.id]">
+                    <img class="clickable" src="images/unlock.png" ng-click="toggleSlaveLock(slave.id)"
+                         ui-if="lockedSlaves[slave.id]">
+                </span>
             </th>
         </tr>
         </thead>
 
         <tbody ng-model="data.buildings" ui-sortable>
         <tr class="building-line" ng-repeat="building in data.buildings">
+            <!-- Building Score -->
             <td class="building-score-box"
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
-                title="Score Total pour le bâtiment {{building.name}}" ui-jq="tooltip">
+                data-original-title="Score Total pour le bâtiment {{building.name}}" ui-jq="tooltip">
                 <span>{{ formatScore(computeBuildingTotalScore(building.id)) }}</span>
             </td>
 
-            <td class="clickable building-box"
+            <!-- Building Info-->
+            <td class="building-box hoverable-content"
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
-                ng-click="sortSlavesByActivityComp(building.activity.comps)"
-                title="Cliquez ici pour classer les esclaves en fonction de leur score dans ce bâtiment.<br><br>Vous pouvez réorganiser les bâtiments avec un drag'n'drop."
-                ui-jq="tooltip">
-                <div>
-                    {{building.name}}
-                        <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)">
-                            <span ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
-                        </span>
+                title="Vous pouvez réorganiser les bâtiments avec un drag'n'drop.">
+                <div class="one-liner">
+                    <img class="hover-only-content clickable one-liner" src="images/delete.png"
+                         ng-click="deleteBuilding(building.id)">
+                    <span class="one-liner">&nbsp;{{building.name}}&nbsp;</span>
+                    <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)" class="one-liner"
+                          ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
+                    <img class="hover-only-content clickable one-liner" src="images/lock.png"
+                         ng-click="toggleBuildingLock(building.id)" ui-if="!lockedBuildings[building.id]">
+                    <img class="hover-only-content clickable one-liner" src="images/unlock.png"
+                         ng-click="toggleBuildingLock(building.id)" ui-if="lockedBuildings[building.id]">
+                    <img class="hover-only-content clickable one-liner" src="images/sort.png"
+                         ng-click="sortSlavesByActivityComp(building.activity.comps)">
                 </div>
                 <div class="activity-label" ui-if='building.activity.name != ""'>{{building.activity.name}}</div>
             </td>
 
+            <!-- Slaves Score Values -->
             <td class="clickable value-box"
                 ng-repeat="slave in data.slaves"
-                ng-class="{'occupying': 'building-occupying', 'full': 'building-full', 'free': 'building-can-occupy'}[getSlaveBuildingStatus(slave.id, building.id)]"
+                ng-class="{'building-full' : getSlaveBuildingStatus(slave.id, building.id) == 'full',
+                'building-occupying': getSlaveBuildingStatus(slave.id, building.id) == 'occupying',
+                'building-can-occupy': getSlaveBuildingStatus(slave.id, building.id) == 'free',
+                'locked-box': (lockedBuildings[building.id] || lockedSlaves[slave.id])}"
                 ng-click="reassign(slave.id, building.id)"
                 data-original-title="{{getValueBoxTooltip(slave.id, building.id)}}"
                 ui-jq="tooltip" ui-options="{placement:'top'}">
@@ -72,10 +93,11 @@
         <table>
             <tr ng-repeat="move in requiredMoves" class="domain-migration-item"
                 ng-class="{'move-completed': move.checked,  'slave-to-monolith': move.to == null}">
-                <td><input type="checkbox" ng-model="move.checked"/></td>
+                <td><input type="checkbox" style="text-align:center; vertical-align:middle" ng-model="move.checked"/>
+                </td>
                 <td>{{move.who}}</td>
                 <td>:</td>
-                <td>{{move.from}}</td>
+                <td>{{{true: "Monolithe", false: move.from}[move.from == null]}}</td>
                 <td>&#8594;</td>
                 <td>{{{true: "Monolithe", false: move.to}[move.to == null]}}</td>
             </tr>

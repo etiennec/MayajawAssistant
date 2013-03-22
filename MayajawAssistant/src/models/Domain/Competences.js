@@ -8,6 +8,6 @@ function Competences(FOR, DEX, END, INT, PER, CHA) {
 
 
     this.toString = function () {
-        return "FOR:"+this.FOR+"/"+"DEX:"+this.DEX+"/"+"END:"+this.END+"/"+"INT:"+this.INT+"/"+"PER:"+this.PER+"/"+"CHA:"+this.CHA;
+        return "FOR:"+this.FOR+" DEX:"+this.DEX+" END:"+this.END+" INT:"+this.INT+" PER:"+this.PER+" CHA:"+this.CHA;
     }
 };

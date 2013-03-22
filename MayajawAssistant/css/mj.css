@@ -109,6 +109,12 @@ textarea.input-text {
     padding: 30px;
 }
 
+.domain-top-buttons {
+    float: left;
+    margin: 15px;
+    padding: 20px;
+}
+
 .bordered {
     border: 2px solid;
     border-radius: 5px;
@@ -171,9 +177,15 @@ div.entry-input-zone {
 
 .building-full {
     background-color: #d3d3d3;
-    color: #696969;
     font-style: italic;
 }
+
+.locked-box {
+    color:red;
+    font-style: italic;
+    font-weight: bold;
+}
+
 
 .building-can-occupy {
 }
@@ -189,6 +201,7 @@ div.entry-input-zone {
 }
 
 .activity-label {
+    clear: both;
     font-size: x-small;
     font-style: italic;
     color: #9a9a9a;
@@ -229,9 +242,26 @@ tr.domain-migration-item td {
 
 .move-completed {
     text-decoration: line-through;
-    color:#808080;
+    color: #808080;
     font-style: italic;
 
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.hover-only-content {
+    display: none;
+}
+
+.hoverable-content:hover .hover-only-content {
+    display: block;
+}
+
+.one-liner {
+    float: left;
 }
 
 /*
