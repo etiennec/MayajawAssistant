@@ -8,12 +8,11 @@ function DomainCtrl($scope, sharedDataService) {
         $scope.lockedSlaves = {};
 
         // Pre-processing buildings
-        var comps = new Competences(20, 20, 20, 20, 20, 20);
         for (var i = 0; i < $scope.data.buildings.length; i++) {
             var building = $scope.data.buildings[i];
 
             // We remove all buildings that have no activity comp score, and set their slaves as not assigned.
-            if (building.name.charAt(0) === '-' || $scope.computeScore(comps, building.activity.comps) == 0) {
+            if (building.name.charAt(0) === '-') {
                 $scope.deleteBuilding(building.id);
                 i--;
                 continue;
