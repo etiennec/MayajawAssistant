@@ -7,25 +7,46 @@ function DomainCtrl($scope, sharedDataService) {
         $scope.lockedBuildings = {};
         $scope.lockedSlaves = {};
 
-        // We remove all buildings that have no activity comp score, and set their slaves as not assigned.
+        // Pre-processing buildings
         var comps = new Competences(20, 20, 20, 20, 20, 20);
         for (var i = 0; i < $scope.data.buildings.length; i++) {
             var building = $scope.data.buildings[i];
-            // We initialize building lock status
-            $scope.lockedBuildings[building.id] = false;
-            if ($scope.computeScore(comps, building.activity.comps) == 0) {
+
+            // We remove all buildings that have no activity comp score, and set their slaves as not assigned.
+            if (building.name.charAt(0) === '-' || $scope.computeScore(comps, building.activity.comps) == 0) {
                 $scope.deleteBuilding(building.id);
                 i--;
+                continue;
+            }
+
+            // We initialize building lock status
+            if (building.name.charAt(0) === '_') {
+                $scope.lockedBuildings[building.id] = true;
+            } else {
+                $scope.lockedBuildings[building.id] = false;
             }
         }
 
-        // We initialize slaves locks statuses
+        // Pre-processing slaves
         for (var i = 0; i < $scope.data.slaves.length; i++) {
+
             var slave = $scope.data.slaves[i];
-            $scope.lockedSlaves[slave.id] = false;
+
+            if (slave.name.charAt(0) === '-') {
+                $scope.deleteSlave(slave.id);
+                i--;
+                continue;
+            }
+
+            if (slave.name.charAt(0) === '_') {
+                $scope.lockedSlaves[slave.id] = true;
+            } else {
+                $scope.lockedSlaves[slave.id] = false;
+            }
         }
 
-        // TODO handle locks based on slaves and buildings names prefixes.
+        // delete or lock slaves & buildings based on first character
+
 
         $scope.originalAssignments = jQuery.extend(true, {}, $scope.data.assignments);
 
@@ -379,7 +400,7 @@ function DomainCtrl($scope, sharedDataService) {
 
         // We finally restore the order of the slaves to what it was before autoAssign.
         $scope.data.slaves.sort(function (a, b) {
-                return a.preAutoAssignIndex - b.preAutoAssignIndex;
+            return a.preAutoAssignIndex - b.preAutoAssignIndex;
         });
 
         // Finished !

@@ -28,11 +28,11 @@
                 ng-class="{true: 'slave-free', false: 'slave-busy'}[(data.assignments[slave.id]==null)]"
                 title="{{slave.comps.toString()}}">
                 <span class="hover-only-content">
-                    <img class="clickable" src="images/delete.png"
+                    <img class="clickable" src="images/delete.png" title="Supprimer l'esclave"
                          ng-click="deleteSlave(slave.id)">&nbsp;{{slave.name}}&nbsp;
-                    <img class="clickable" src="images/lock.png" ng-click="toggleSlaveLock(slave.id)"
+                    <img class="clickable" src="images/lock.png" title="Vérouiller l'esclave" ng-click="toggleSlaveLock(slave.id)"
                          ui-if="!lockedSlaves[slave.id]">
-                    <img class="clickable" src="images/unlock.png" ng-click="toggleSlaveLock(slave.id)"
+                    <img class="clickable" src="images/unlock.png" title="Déverouiller l'esclave" ng-click="toggleSlaveLock(slave.id)"
                          ui-if="lockedSlaves[slave.id]">
                 </span>
             </th>
@@ -53,16 +53,16 @@
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
                 title="Vous pouvez réorganiser les bâtiments avec un drag'n'drop.">
                 <div class="one-liner">
-                    <img class="hover-only-content clickable one-liner" src="images/delete.png"
+                    <img class="hover-only-content clickable one-liner" src="images/delete.png" title="Supprimer le bâtiment"
                          ng-click="deleteBuilding(building.id)">
                     <span class="one-liner">&nbsp;{{building.name}}&nbsp;</span>
                     <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)" class="one-liner"
                           ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
-                    <img class="hover-only-content clickable one-liner" src="images/lock.png"
+                    <img class="hover-only-content clickable one-liner" src="images/lock.png" title="Verouiller le bâtiment"
                          ng-click="toggleBuildingLock(building.id)" ui-if="!lockedBuildings[building.id]">
-                    <img class="hover-only-content clickable one-liner" src="images/unlock.png"
+                    <img class="hover-only-content clickable one-liner" src="images/unlock.png" title="Dévérouiller le bâtiment"
                          ng-click="toggleBuildingLock(building.id)" ui-if="lockedBuildings[building.id]">
-                    <img class="hover-only-content clickable one-liner" src="images/sort.png"
+                    <img class="hover-only-content clickable one-liner" src="images/sort.png" title="Classer les esclaves du plus efficace au moins efficace pour ce bâtiment"
                          ng-click="sortSlavesByActivityComp(building.activity.comps)">
                 </div>
                 <div class="activity-label" ui-if='building.activity.name != ""'>{{building.activity.name}}</div>
