@@ -11,7 +11,7 @@ ParseUtils.sellLineMatcher = /(.+) a vendu (\d+) (.+)/;
 ParseUtils.buyLineMatcher = /(.+) a achet. (\d+) (.+)/;
 
 //ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#.+<table>(.+)<\/table>/g;
-ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]+?<table>([\s\S]+?)<\/table>/g;
+ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]+?<table>[\s\S]+?<td style='vertical-align:top;'>([\s\S]+?)<\/table>/g;
 ParseUtils.buildingNameMatcher = /<b>([^<]*?)(<b>&ndash;<\/b>)?<\/b>(<i>.+<\/i><b><\/b>)?( : (.*))?<div class='rapports'>/;
 ParseUtils.domainSlaveMatcher = /m\('<img width=55 height=68  style=\\'float:left\\' src=\\'i\/avatars[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?<\/div><b>(.*?)<\/b>[^\)]*\)/g;
 
@@ -19,12 +19,25 @@ ParseUtils.buildingActivityMatcher = /<div onmouseover='m\("<img src=i\/struct\/
 ParseUtils.buildingActivityDetailMatcher = /width:(\d+)px;height:8px;background-color:#(......);/g;
 
 ParseUtils.colorToCompMap = {
+    // There are 3 color themes, so 3 different colors for each comp.
     'FFD78A': 'FOR',
+    'FFA800': 'FOR',
+    'CD7D00': 'FOR',
     'F6F289': 'DEX',
+    'FFFF00': 'DEX',
+    'CDC717': 'DEX',
     'EC8B8B': 'END',
+    'FF0000': 'END',
+    'B00202': 'END',
     'C0D1EC': 'INT',
+    '3787FF': 'INT',
+    '0A549A': 'INT',
     'B3F1B2': 'PER',
-    'E8CFE8': 'CHA'
+    '00FF00': 'PER',
+    '3E8108': 'PER',
+    'E8CFE8': 'CHA',
+    'FF00FF': 'CHA',
+    '670073': 'CHA'
 };
 
 // Parse a line into a header line, i.e. year/month line.
@@ -275,6 +288,12 @@ ParseUtils.parseSlavesInfo = function (domainItemStr) {
     var slaveMatch;
 
     while (slaveMatch = ParseUtils.domainSlaveMatcher.exec(domainItemStr)) {
+
+        // We skip children (infants or bigger)
+        if (slaveMatch[0].indexOf('Enfant &nbsp;&nbsp;&nbsp;') != -1) {
+            continue;
+        }
+
         var slave = new Slave();
         slave.comps.FOR = getCompFromPixels(slaveMatch[1]);
         slave.comps.DEX = getCompFromPixels(slaveMatch[2]);
