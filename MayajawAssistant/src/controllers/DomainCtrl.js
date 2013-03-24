@@ -213,8 +213,14 @@ function DomainCtrl($scope, sharedDataService) {
 
         var occupancy = building.getOccupancyArray($scope.data.assignments);
 
-        // Building is full if the last space is occupied.
-        return occupancy[occupancy.length - 1];
+        var lastNonLockedindex = building.level - building.lockedRooms;
+        if (lastNonLockedindex == 0) {
+            // all rooms locked: building full
+            return true;
+        }
+
+        // Building is full if the last non locked space is not free.
+        return (occupancy[lastNonLockedindex - 1] === 1);
     }
 
     // Return the status for the given slave and building:
@@ -425,6 +431,23 @@ function DomainCtrl($scope, sharedDataService) {
             // No free slave found.
             return null;
         }
+    }
+
+    $scope.toggleBuildingOccupancy = function(building, isOccupied) {
+        switch(isOccupied) {
+            case 0: // room is not occupied: lock it !
+                building.lockedRooms += 1;
+                break;
+            case 'x': // Room is locked: unlock a room in the building
+                building.lockedRooms -= 1;
+                break;
+            default:
+            // room is occupied: do nothing.
+        }
+    }
+
+    $scope.formatOccupancy = function(occupancy) {
+        return {0: 'O', 1: 'Ø', 'x': 'X'}[occupancy];
     }
 
 

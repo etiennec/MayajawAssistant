@@ -53,15 +53,16 @@
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
                 title="Vous pouvez réorganiser les bâtiments avec un drag'n'drop.">
                 <div class="one-liner">
-                    <img class="hover-only-content clickable one-liner" src="images/delete.png" title="Supprimer le bâtiment"
-                         ng-click="deleteBuilding(building.id)">
                     <span class="one-liner">&nbsp;{{building.name}}&nbsp;</span>
-                    <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)" class="one-liner"
-                          ng-class="{true: 'red', false: 'green'}[isOccupied]">&bull;</span>
+                    <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)" class="one-liner {{{true: '', false: 'clickable'}[isOccupied == 1]}}"
+                          ng-click="toggleBuildingOccupancy(building, isOccupied)"
+                          ng-class="{1: 'red', 0: 'blue', 'x': 'red'}[isOccupied]">{{ formatOccupancy(isOccupied) }}</span>
                     <img class="hover-only-content clickable one-liner" src="images/lock.png" title="Verouiller le bâtiment"
                          ng-click="toggleBuildingLock(building.id)" ui-if="!lockedBuildings[building.id]">
                     <img class="hover-only-content clickable one-liner" src="images/unlock.png" title="Dévérouiller le bâtiment"
                          ng-click="toggleBuildingLock(building.id)" ui-if="lockedBuildings[building.id]">
+                    <img class="hover-only-content clickable one-liner" src="images/delete.png" title="Supprimer le bâtiment"
+                         ng-click="deleteBuilding(building.id)">
                     <img class="hover-only-content clickable one-liner" src="images/sort.png" title="Classer les esclaves du plus efficace au moins efficace pour ce bâtiment"
                          ng-click="sortSlavesByActivityComp(building.activity.comps)">
                 </div>
