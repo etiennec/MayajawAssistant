@@ -12,7 +12,13 @@ ParseUtils.buyLineMatcher = /(.+) a achet. (\d+) (.+)/;
 
 //ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#.+<table>(.+)<\/table>/g;
 ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]+?<table>[\s\S]+?<td style='vertical-align:top;'>([\s\S]+?)<\/table>/g;
-ParseUtils.buildingNameMatcher = /<b>([^<]*?)(<b>&ndash;<\/b>)?<\/b>(<i>.+<\/i><b><\/b>)?( : (.*))?<div class='rapports'>/;
+//ParseUtils.buildingNameMatcher = /<b>([^<]*?)(<b>&ndash;<\/b>)?<\/b>(<i>.+<\/i><b><\/b>)?( : (.*))?<div class='rapports'>/;
+ParseUtils.buildingNameLineMatcher = /[^']<b>(.*?)<(\/)?div/;
+ParseUtils.buildingNameLevelMatcher = /(&bull;)+/;
+ParseUtils.buildingNameMatcher = /(.*?)(<b>&ndash;<\/b>)?(&bull;)*<\/b>/;
+ParseUtils.buildingActivityNameMatcher = / : ([^<]*)/;
+
+
 ParseUtils.domainSlaveMatcher = /m\('<img width=55 height=68  style=\\'float:left\\' src=\\'i\/avatars[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?#......;width:([^p]*)px[^\)]*?<\/div><b>(.*?)<\/b>[^\)]*\)/g;
 
 ParseUtils.buildingActivityMatcher = /<div onmouseover='m\("<img src=i\/struct\/info1.png>","Cette barre indique les caractéristiques prises en compte(.*)?<div id='gomarche/;
@@ -225,23 +231,43 @@ ParseUtils.getMockDomainInput = function () {
 ParseUtils.parseBuildingInfo = function (domainItemStr) {
     var building = new Building();
 
-    var nameMatch = ParseUtils.buildingNameMatcher.exec(domainItemStr);
+    var nameMatch = ParseUtils.buildingNameLineMatcher.exec(domainItemStr);
     if (nameMatch != null) {
-        // There are bullets after the name if level > 1.
-        var level = 0;
-        var name = nameMatch[1].trim();
-        while (ParseUtils.endsWith(name, '&bull;')) {
-            name = name.substr(0, name.length - '&bull;'.length);
-            level++;
+
+        var nameLine = nameMatch[1].trim();
+        console.log(nameLine);
+
+        var buildingName = ParseUtils.buildingNameMatcher.exec(nameLine);
+        if (buildingName != null) {
+            building.name = buildingName[1].trim();
+            // We need some bullet removing as the regex can get a bit too hungry.
+            while (ParseUtils.endsWith(building.name, '&bull;')) {
+                building.name = building.name.substr(0, building.name.length - '&bull;'.length);
+            }
+
+        } else {
+            building.name = "NA";
         }
 
-        building.name = name.trim().replace('&rsquo;', "'");
+        // Reading level from number of bullets
+        var level = 0;
+        var levelMatch = ParseUtils.buildingNameLevelMatcher.exec(nameLine);
+        if (levelMatch != null) {
+            var bullStr = levelMatch[0].trim();
+
+            while (ParseUtils.endsWith(bullStr, '&bull;')) {
+                bullStr = bullStr.substr(0, bullStr.length - '&bull;'.length);
+                level++;
+            }
+        }
         building.level = level === 0 ? 1 : level;
 
         var activity = new Activity();
 
-        if (nameMatch[5] !== undefined) {
-            activity.name = nameMatch[5];
+        var activityName = ParseUtils.buildingActivityNameMatcher.exec(nameLine);
+
+        if (activityName != null) {
+            activity.name = activityName[1].trim();
         }
 
         activity.comps = ParseUtils.parseBuildingActivity(domainItemStr);

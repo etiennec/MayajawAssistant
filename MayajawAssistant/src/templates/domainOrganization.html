@@ -53,7 +53,7 @@
                 ng-class="{true: 'building-full', false: ''}[isBuildingFull(building.id)]"
                 title="Vous pouvez réorganiser les bâtiments avec un drag'n'drop.">
                 <div class="one-liner">
-                    <span class="one-liner">&nbsp;{{building.name}}&nbsp;</span>
+                    <span class="one-liner" ng-bind-html-unsafe="'&nbsp;' + building.name + '&nbsp;'"></span>
                     <span ng-repeat="isOccupied in building.getOccupancyArray(data.assignments)" class="one-liner {{{true: '', false: 'clickable'}[isOccupied == 1]}}"
                           ng-click="toggleBuildingOccupancy(building, isOccupied)"
                           ng-class="{1: 'red', 0: 'blue', 'x': 'red'}[isOccupied]">{{ formatOccupancy(isOccupied) }}</span>
