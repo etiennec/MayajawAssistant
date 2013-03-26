@@ -15,6 +15,7 @@ ParseUtils.domainBuildingInfoMatcher = /<hr style='margin-bottom:0;color:#[\s\S]
 //ParseUtils.buildingNameMatcher = /<b>([^<]*?)(<b>&ndash;<\/b>)?<\/b>(<i>.+<\/i><b><\/b>)?( : (.*))?<div class='rapports'>/;
 ParseUtils.buildingNameLineMatcher = /[^']<b>(.*?)<(\/)?div/;
 ParseUtils.buildingNameLevelMatcher = /(&bull;)+/;
+ParseUtils.buildingName5LevelMatcher = /<b>&ndash;<\/b>/;
 ParseUtils.buildingNameMatcher = /(.*?)(<b>&ndash;<\/b>)?(&bull;)*<\/b>/;
 ParseUtils.buildingActivityNameMatcher = / : ([^<]*)/;
 
@@ -260,6 +261,11 @@ ParseUtils.parseBuildingInfo = function (domainItemStr) {
                 level++;
             }
         }
+        // One dash = 5 levels.
+        if (ParseUtils.buildingName5LevelMatcher.exec(nameLine)) {
+            level += 5;
+        }
+
         building.level = level === 0 ? 1 : level;
 
         var activity = new Activity();

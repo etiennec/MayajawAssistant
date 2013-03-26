@@ -246,6 +246,11 @@ function DomainCtrl($scope, sharedDataService) {
 
     $scope.reassign = function (slaveId, buildingId) {
 
+        // We can't assign a locked slave.
+        if ($scope.lockedSlaves[slaveId] == true) {
+            return;
+        }
+
         if (buildingId === null) {
             $scope.data.assignments[slaveId] = null;
             return;
@@ -253,6 +258,16 @@ function DomainCtrl($scope, sharedDataService) {
 
         // We can't assign a slave to a building already full.
         if ($scope.getSlaveBuildingStatus(slaveId, buildingId) === 'full') {
+            return;
+        }
+
+        // We can't assign to a locked building.
+        if ($scope.lockedBuildings[buildingId] == true) {
+            return;
+        }
+
+        // We can't assign from a locked building
+        if ($scope.data.assignments[slaveId] != null && $scope.lockedBuildings[$scope.data.assignments[slaveId]] == true) {
             return;
         }
 
