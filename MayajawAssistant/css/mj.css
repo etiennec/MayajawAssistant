@@ -65,7 +65,7 @@ div .chart {
 
 a.input-button {
     clear: both;
-    width: 300px;
+    /*width: 300px;*/
     float: left;
     padding-left: 20px;
     padding-top: 10px;
@@ -124,7 +124,7 @@ textarea.input-text {
 
 div.entry-input-zone {
     border-radius: 25px;
-    width: 27%;
+    width: 24%;
 }
 
 .input-title {
