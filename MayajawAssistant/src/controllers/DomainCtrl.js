@@ -93,7 +93,6 @@ function DomainCtrl($scope, sharedDataService) {
     }
 
     // Sort the slaves list from the stronger to weaker for this building.
-    // TODO add extra comps to add extra search criterias in case of equality.
     $scope.sortSlavesByActivityComp = function (activityComps) {
 
         // We add some pre-sort index to all slaves in order to implement a stable sorting.
@@ -369,6 +368,51 @@ function DomainCtrl($scope, sharedDataService) {
         $scope.lockedBuildings[buildingId] = !$scope.lockedBuildings[buildingId];
     }
 
+    function switchSlaves(slave1, slave2) {
+        var tempBuilding = $scope.data.assignments[slave1.id];
+        $scope.data.assignments[slave1.id] = $scope.data.assignments[slave2.id];
+        $scope.data.assignments[slave2.id] = tempBuilding;
+    }
+
+    $scope.compareAndSwitch = function () {
+        var hasSwitched = true;
+        var count = 0;
+        while (hasSwitched == true && count < 10) {
+            hasSwitched = false;
+            count++;
+            // Compare each slave with the others, and switch them if at least one is better without the other being worse.
+            for (var i = 0; i < $scope.data.slaves.length; i++) {
+
+                for (var j = i + 1; j < $scope.data.slaves.length; j++) {
+
+                    var slave1 = $scope.data.slaves[i];
+                    var slave2 = $scope.data.slaves[j];
+
+                    if (slave1.name.charAt(0) === '-'
+                        || slave2.name.charAt(0) === '-'
+                        || slave1.name.charAt(0) === '_'
+                        || slave2.name.charAt(0) === '_') {
+                        continue;
+                    }
+
+                    var bat1 = $scope.data.assignments[slave1.id];
+                    var bat2 = $scope.data.assignments[slave2.id];
+                    bat1 = bat1 === null? null : getBuilding(bat1);
+                    bat2 = bat2 === null? null : getBuilding(bat2);
+
+                    var score1 = bat1 === null ? 0 : $scope.computeScore(slave1.comps, bat1.activity.comps);
+                    var score2 = bat2 === null ? 0 : $scope.computeScore(slave2.comps, bat2.activity.comps);
+                    var switchScore1 = bat1 === null ? 0 : $scope.computeScore(slave2.comps, bat1.activity.comps);
+                    var switchScore2 = bat2 === null ? 0 : $scope.computeScore(slave1.comps, bat2.activity.comps);
+
+                    if ((score1 < switchScore1 && score2 <= switchScore2) || (score1 <= switchScore1 && score2 < switchScore2)) {
+                        switchSlaves(slave1, slave2);
+                        hasSwitched = true;
+                    }
+                }
+            }
+        }
+    }
 
     $scope.autoAssign = function () {
         // First, we clean all assignments, except when buildings or slaves are locked.
@@ -448,8 +492,8 @@ function DomainCtrl($scope, sharedDataService) {
         }
     }
 
-    $scope.toggleBuildingOccupancy = function(building, isOccupied) {
-        switch(isOccupied) {
+    $scope.toggleBuildingOccupancy = function (building, isOccupied) {
+        switch (isOccupied) {
             case 0: // room is not occupied: lock it !
                 building.lockedRooms += 1;
                 break;
@@ -461,7 +505,7 @@ function DomainCtrl($scope, sharedDataService) {
         }
     }
 
-    $scope.formatOccupancy = function(occupancy) {
+    $scope.formatOccupancy = function (occupancy) {
         return {0: 'O', 1: 'Ø', 'x': 'X'}[occupancy];
     }
 
